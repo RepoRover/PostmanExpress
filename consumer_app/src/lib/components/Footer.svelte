@@ -20,7 +20,7 @@
 		</a>
 	</div>
 	<div class="left">
-		<a href="https://github.com/RepoRover/PostmanExpress">Projects’ GitHub</a>
+		<a href="https://github.com/RepoRover/PostmanExpress" target="_blank">Projects’ GitHub</a>
 		<p>Copyright ©</p>
 	</div>
 </footer>
