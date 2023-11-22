@@ -38,7 +38,6 @@
 		position: fixed;
 		width: 100%;
 		z-index: 10;
-		// box-shadow: 0 8px 20px rgba($color: #000000, $alpha: 0.25);
 
 		.inner-header {
 			display: flex;
@@ -46,12 +45,23 @@
 			align-items: center;
 			padding: 0 3.6rem;
 			height: 7.2rem;
-			// background-color: var(--s-bg-color);
-			// z-index: 10; /* Ensure it stays above other content */
 
 			.text {
 				font-size: 2.4rem;
 				text-decoration: none;
+
+				&-logo {
+					color: var(--accent-color);
+					position: relative;
+
+					&::after {
+						content: 'SvelteKit';
+						font-size: 1rem;
+						position: absolute;
+						right: -5rem;
+						cursor: default;
+					}
+				}
 			}
 
 			.menu-btn {
@@ -65,10 +75,6 @@
 				&:hover {
 					color: var(--accent-color);
 				}
-			}
-
-			.text-logo {
-				color: var(--accent-color);
 			}
 		}
 	}

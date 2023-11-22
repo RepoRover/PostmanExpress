@@ -3,10 +3,11 @@
 	import { Header, Footer } from '$components';
 	import { page } from '$app/stores';
 
+	export let data;
+
 	/**
 	 * @type {string}
 	 */
-	const username = 'Yuriy Gaitrov WOW';
 
 	/**
 	 * @type {number}
@@ -19,19 +20,13 @@
 	let headerOpacity = 0;
 	let headerShadowAlpha = 0;
 
-	$: if (header) {
-		headerOpacity = scrollY / header.offsetHeight < 1 ? scrollY / header.offsetHeight : 1;
-	}
+	const user = data.user;
 
 	$: if (header) {
-		console.log(headerShadowAlpha);
+		headerOpacity = scrollY / header.offsetHeight < 1 ? scrollY / header.offsetHeight : 1;
 		headerShadowAlpha =
 			scrollY / header.offsetHeight < 1 ? (scrollY / header.offsetHeight) * 0.25 : 0.25;
 	}
-
-	// $: if (header) {
-	// 	headerOpacity = scrollY / header.offsetHeight < 1 ? scrollY / header.offsetHeight : 1;
-	// }
 </script>
 
 <svelte:window bind:scrollY />
@@ -40,18 +35,22 @@
 	<title>{$page.data.title ? `${$page.data.title}` : 'PostmanExpress'}</title>
 </svelte:head>
 
-<div
-	class="header"
-	bind:this={header}
-	style:opacity={headerOpacity}
-	style:box-shadow={`0 8px 20px rgba(0, 0, 0, ${headerShadowAlpha})`}
-></div>
-<Header {username}></Header>
+{#if user}
+	<div
+		class="header"
+		bind:this={header}
+		style:opacity={headerOpacity}
+		style:box-shadow={`0 8px 20px rgba(0, 0, 0, ${headerShadowAlpha})`}
+	></div>
+	<Header username={user.username}></Header>
+{/if}
 <main>
 	<div class="page-content">
 		<slot />
 	</div>
-	<Footer></Footer>
+	{#if user}
+		<Footer></Footer>
+	{/if}
 </main>
 
 <style lang="scss">
@@ -61,7 +60,7 @@
 		position: fixed;
 		width: 100%;
 		background-color: var(--s-bg-color);
-		// box-shadow: 0 8px 20px rgba($color: #000000, $alpha: 0.25);
+		opacity: 0;
 	}
 	main {
 		margin: 0 auto;
