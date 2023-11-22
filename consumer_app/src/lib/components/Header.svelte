@@ -20,7 +20,7 @@
 	<div class="header">
 		<div class="inner-header">
 			<div class="logo">
-				<p class="text text-logo">PostmanExpress</p>
+				<a class="text text-logo" href="/">PostmanExpress</a>
 			</div>
 			<div class="menu">
 				<button on:click={openMenu} class="text menu-btn">Menu</button>
@@ -37,7 +37,8 @@
 	.header {
 		position: fixed;
 		width: 100%;
-		box-shadow: 0 8px 20px rgba($color: #000000, $alpha: 0.25);
+		z-index: 10;
+		// box-shadow: 0 8px 20px rgba($color: #000000, $alpha: 0.25);
 
 		.inner-header {
 			display: flex;
@@ -45,11 +46,12 @@
 			align-items: center;
 			padding: 0 3.6rem;
 			height: 7.2rem;
-			background-color: var(--s-bg-color);
-			z-index: 10; /* Ensure it stays above other content */
+			// background-color: var(--s-bg-color);
+			// z-index: 10; /* Ensure it stays above other content */
 
 			.text {
 				font-size: 2.4rem;
+				text-decoration: none;
 			}
 
 			.menu-btn {

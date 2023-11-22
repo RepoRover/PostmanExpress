@@ -90,6 +90,7 @@
 		height: 100dvh;
 		width: 19.6rem;
 		right: 0;
+		top: 0;
 		box-shadow: -8px 0 20px rgba($color: #000000, $alpha: 0.25);
 		display: none;
 
