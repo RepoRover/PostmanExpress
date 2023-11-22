@@ -1,2 +1,18 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script></script>
+
+<!-- <div class="content"></div> -->
+<!-- <div class="content"></div>
+<div class="content"></div>
+<div class="content"></div>
+<div class="content"></div>
+<div class="content"></div> -->
+
+<div></div>
+
+<style lang="scss">
+	.content {
+		height: 50rem;
+		width: 50rem;
+		background-color: aquamarine;
+	}
+</style>
