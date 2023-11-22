@@ -2,7 +2,10 @@
 	import '../styles/main.scss';
 	import { Header, Footer } from '$components';
 
-	const username = 'RepoRover';
+	/**
+	 * @type {string}
+	 */
+	const username = 'Yuriy Gaitrov WOW';
 </script>
 
 <Header {username}></Header>

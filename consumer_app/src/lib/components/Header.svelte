@@ -1,5 +1,19 @@
 <script>
+	import { SideBar } from '$components';
+
+	/**
+	 * @type {string}
+	 */
 	export let username;
+	let isMenuOpen = false;
+
+	const openMenu = () => {
+		isMenuOpen = true;
+	};
+
+	const closeMenu = () => {
+		isMenuOpen = false;
+	};
 </script>
 
 <header>
@@ -9,11 +23,15 @@
 				<p class="text text-logo">PostmanExpress</p>
 			</div>
 			<div class="menu">
-				<p class="text">Menu</p>
+				<button on:click={openMenu} class="text menu-btn">Menu</button>
 			</div>
 		</div>
 	</div>
 </header>
+
+{#if isMenuOpen}
+	<SideBar {username} {isMenuOpen} on:closeMenu={closeMenu}></SideBar>
+{/if}
 
 <style lang="scss">
 	.header {
@@ -32,6 +50,19 @@
 
 			.text {
 				font-size: 2.4rem;
+			}
+
+			.menu-btn {
+				background-color: transparent;
+				border: none;
+				color: var(--text-color);
+				font-family: inherit;
+				cursor: pointer;
+				transition: all 0.3s;
+
+				&:hover {
+					color: var(--accent-color);
+				}
 			}
 
 			.text-logo {
