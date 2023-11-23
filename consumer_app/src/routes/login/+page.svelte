@@ -3,6 +3,7 @@
 	import { Eye, EyeOff } from 'lucide-svelte';
 	import { tick } from 'svelte';
 	import { fly } from 'svelte/transition';
+	import { notifications } from '$stores';
 	let password = '';
 	let user_email = '';
 
@@ -33,7 +34,12 @@
 	const checkPwdValid = () => {
 		passwordValid = regex.test(password) ? true : false;
 
-		if (!passwordValid) console.log('Show message password invalid');
+		if (!passwordValid) {
+			let length = $notifications.length;
+			if (length === 0) {
+				notifications.warning('Password contains invalid charachters');
+			}
+		}
 	};
 </script>
 
@@ -171,6 +177,7 @@
 
 			.pwd-input {
 				position: absolute;
+				z-index: 20;
 			}
 		}
 

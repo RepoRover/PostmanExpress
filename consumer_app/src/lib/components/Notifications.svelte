@@ -27,7 +27,17 @@
 					</button>
 				</div>
 				<div class="bottom">
-					<p class="message">{notification.message}</p>
+					{#if notification.parcel_id}
+						<a
+							href="/parcels/{notification.parcel_id}"
+							class="message"
+							on:click={() => {
+								notifications.remove(notification.id);
+							}}>{notification.message}</a
+						>
+					{:else}
+						<p class="message">{notification.message}</p>
+					{/if}
 					{#if notification.status}
 						<div class="status-box">
 							<div class="status-circle {notification.status}"></div>
@@ -50,6 +60,7 @@
 		top: 2.8rem;
 		left: 3.6rem;
 		gap: 2.4rem;
+		z-index: 100;
 
 		.notification {
 			width: 24.5rem;
@@ -67,17 +78,25 @@
 			}
 			&.warning {
 				border: 2px solid var(--en-route);
+
+				.title {
+					color: var(--en-route);
+				}
 			}
 			&.error {
 				border: 2px solid var(--error);
+
+				.title {
+					color: var(--error);
+				}
 			}
 
 			.top {
 				display: flex;
 				margin-bottom: 1.6rem;
+				color: var(--accent-color);
 
 				.title {
-					color: var(--accent-color);
 					font-size: 1.4rem;
 				}
 			}
@@ -91,12 +110,20 @@
 					align-items: center;
 
 					.status-circle {
-						height: 2rem;
-						width: 2rem;
+						height: 0.9rem;
+						width: 0.9rem;
 						border-radius: 100%;
 						&.delivered {
 							background-color: var(--delivered);
 						}
+					}
+				}
+
+				.message {
+					&:link,
+					&:visited {
+						text-decoration: none;
+						color: var(--text-color);
 					}
 				}
 			}

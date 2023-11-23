@@ -75,7 +75,7 @@
 <style lang="scss">
 	.overlay {
 		position: fixed;
-		z-index: 100;
+		z-index: 200;
 		height: 100dvh;
 		width: 100dvw;
 		backdrop-filter: blur(0.3rem);
@@ -85,7 +85,7 @@
 
 	nav {
 		position: fixed;
-		z-index: 200;
+		z-index: 300;
 		background-color: var(--s-bg-color);
 		height: 100dvh;
 		width: 19.6rem;

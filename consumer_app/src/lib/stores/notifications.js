@@ -5,8 +5,8 @@ function createNotificationsStore() {
 	const { subscribe, update } = writable([
 		{
 			type: 'info',
-			title: 'what is it',
-			message: 'Hello message',
+			title: 'New parcel comming',
+			message: 'Matheus sent you a parcel',
 			id: v4()
 		},
 		{
@@ -20,19 +20,30 @@ function createNotificationsStore() {
 		{
 			type: 'warning',
 			title: 'Warning',
-			message: 'Hello message',
+			message: 'Invalid password',
 			id: v4()
 		},
 		{
 			type: 'error',
 			title: 'Error',
-			message: 'Hello message',
+			message: "Couldn't create new parcel",
 			id: v4()
 		}
 	]);
 
-	// @ts-ignore
-	function addNotification({ type, title, message, id, timeout = 3000, status, parcel_id }) {
+	function addNotification({
+		// @ts-ignore
+		type,
+		// @ts-ignore
+		title,
+		// @ts-ignore
+		message,
+		// @ts-ignore
+		id,
+		timeout = 3000,
+		status = null,
+		parcel_id = null
+	}) {
 		// @ts-ignore
 		update((notifications) => [{ type, title, message, id, status, parcel_id }, ...notifications]);
 		if (timeout) {
@@ -61,7 +72,7 @@ function createNotificationsStore() {
 				id: v4()
 			}),
 		// @ts-ignore
-		warning: (title, message, timeout, status, parcel_id) =>
+		warning: (message, timeout, status, parcel_id) =>
 			addNotification({
 				type: 'warning',
 				title: 'Warning',
@@ -72,7 +83,7 @@ function createNotificationsStore() {
 				id: v4()
 			}),
 		// @ts-ignore
-		error: (title, message, timeout, status, parcel_id) =>
+		error: (message, timeout, status, parcel_id) =>
 			addNotification({
 				type: 'error',
 				title: 'Error',
