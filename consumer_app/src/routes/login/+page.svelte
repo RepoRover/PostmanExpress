@@ -4,7 +4,7 @@
 	import { enhance, applyAction } from '$app/forms';
 	import { Eye, EyeOff } from 'lucide-svelte';
 	import { tick } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fly, fade } from 'svelte/transition';
 	import { notifications } from '$stores';
 	import { Loader } from '$components';
 	let password = '';
@@ -58,7 +58,7 @@
 	$: submitDisabled = !passwordValid || user_email.length === 0 ? true : false;
 </script>
 
-<div class="logo">
+<div class="logo" in:fade={{ delay: 550, duration: 400 }} out:fade={{ duration: 350 }}>
 	<h1>PostmanExpress</h1>
 	<div class="loader">
 		{#if isLoading}
@@ -82,7 +82,11 @@
 		};
 	}}
 >
-	<div class="input-box">
+	<div
+		class="input-box"
+		in:fade={{ delay: 600, duration: 350 }}
+		out:fade={{ duration: 350, delay: 50 }}
+	>
 		<input
 			name="user_email"
 			type="text"
@@ -91,7 +95,11 @@
 			on:input={checkEmailLength}
 		/>
 	</div>
-	<div class="password-block">
+	<div
+		class="password-block"
+		in:fade={{ delay: 650, duration: 350 }}
+		out:fade={{ duration: 350, delay: 100 }}
+	>
 		{#if showPassword}
 			<div
 				class="input-box pwd-input"
@@ -134,9 +142,19 @@
 			</div>
 		{/if}
 	</div>
-	<button type="submit" class="submit-btn" disabled={submitDisabled}>Apply</button>
+	<button
+		type="submit"
+		class="submit-btn"
+		disabled={submitDisabled}
+		in:fade={{ delay: 700, duration: 350 }}
+		out:fade={{ duration: 350, delay: 150 }}>Apply</button
+	>
 </form>
-<div class="message">
+<div
+	class="message"
+	in:fade={{ delay: 750, duration: 350 }}
+	out:fade={{ duration: 350, delay: 200 }}
+>
 	<p>Don't have an account yet? <a href="/signup">Sign up</a></p>
 </div>
 

@@ -101,6 +101,7 @@
 		height: 100dvh;
 		width: 100dvw;
 		backdrop-filter: blur(0.3rem);
+		-webkit-backdrop-filter: blur(0.3rem);
 		overflow: hidden;
 		background-color: rgba($color: #000000, $alpha: 0.4);
 	}

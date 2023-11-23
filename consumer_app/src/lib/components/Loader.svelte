@@ -8,7 +8,7 @@
 </script>
 
 <!-- <div class="square-circle-3" transition:fade={{ duration: 300 }}></div> -->
-<div class="square-circle-3" transition:fade={{ duration: 300 }} style={styleVars}></div>
+<div class="square-circle-3" transition:fade={{ duration: 200 }} style={styleVars}></div>
 
 <style lang="scss">
 	.square-circle-3 {

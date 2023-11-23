@@ -1,12 +1,16 @@
 import { redirect } from '@sveltejs/kit';
 
-/**@type {import('@sveltejs/kit').Load} */
+/** @type {import('@sveltejs/kit').Load} */
 export const load = async ({ data, url }) => {
 	const { user } = data || {};
-	if (url.pathname === '/login' && user) {
+
+	const isAuthPage = url.pathname === '/login' || url.pathname === '/signup';
+
+	if (user && isAuthPage) {
 		throw redirect(307, '/');
 	}
-	if (url.pathname !== '/login' && !user) {
+
+	if (!user && !isAuthPage) {
 		throw redirect(307, '/login');
 	}
 

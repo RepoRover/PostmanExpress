@@ -16,8 +16,6 @@ export const actions = {
 
 		const resJSON = await response.json();
 
-		console.log(resJSON);
-
 		if (!response.ok) {
 			return fail(response.status, resJSON);
 		}

@@ -4,6 +4,8 @@
 	import { page } from '$app/stores';
 	import { Notifications } from '$components';
 	import { notifications } from '$stores';
+	import { Loader } from '$components';
+	import { afterNavigate, beforeNavigate } from '$app/navigation';
 
 	export let data;
 
@@ -21,12 +23,11 @@
 	let header;
 	let headerOpacity = 0;
 	let headerShadowAlpha = 0;
+	let isLoading = false;
 
 	// @ts-ignore
 	$: user = data.user;
 	$: userNotifications = user ? user.notifications : [];
-
-	$: console.log(userNotifications);
 
 	$: if (userNotifications) {
 		if (userNotifications.length > 0) {
@@ -51,6 +52,13 @@
 		headerShadowAlpha =
 			scrollY / header.offsetHeight < 1 ? (scrollY / header.offsetHeight) * 0.25 : 0.25;
 	}
+
+	beforeNavigate(() => {
+		isLoading = true;
+	});
+	afterNavigate(() => {
+		isLoading = false;
+	});
 </script>
 
 <svelte:window bind:scrollY />
@@ -69,6 +77,9 @@
 		style:box-shadow={`0 8px 20px rgba(0, 0, 0, ${headerShadowAlpha})`}
 	></div>
 	<Header username={user.username}></Header>
+	{#if isLoading}
+		<div class="loader"><Loader></Loader></div>
+	{/if}
 {/if}
 <main>
 	<div class="page-content">
@@ -87,6 +98,13 @@
 		width: 100%;
 		background-color: var(--s-bg-color);
 		opacity: 0;
+	}
+
+	.loader {
+		position: fixed;
+		z-index: 10;
+		bottom: 4rem;
+		left: 4rem;
 	}
 	main {
 		margin: 0 auto;
