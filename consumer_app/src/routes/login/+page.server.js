@@ -1,20 +1,27 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 
 /** @type {import('@sveltejs/kit').Actions} */
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ request, fetch }) => {
 		const form = await request.formData();
 
-		const userEmail = form.get('user_email');
+		const user_email = form.get('user_email');
 		const password = form.get('password');
-		if (!userEmail || !password) return fail(400, { message: 'Required fields missing' });
+		if (!user_email || !password) return fail(400, { message: 'Required fields missing' });
 
-		return new Promise((resolve) => {
-			setTimeout(() => {
-				resolve(fail(400, { status: 'fail', message: 'Bad request' }));
-			}, 2000); // Adjust the delay as needed
+		const response = await fetch('/api/auth/login', {
+			method: 'POST',
+			body: JSON.stringify({ user_email, password })
 		});
-		// return fail(400, { status: 'fail', message: 'Bad request' });
-		// return { status: 'success' };
+
+		const resJSON = await response.json();
+
+		console.log(resJSON);
+
+		if (!response.ok) {
+			return fail(response.status, resJSON);
+		}
+
+		throw redirect(303, '/');
 	}
 };

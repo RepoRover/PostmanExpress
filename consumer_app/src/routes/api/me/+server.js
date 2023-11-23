@@ -1,5 +1,5 @@
+import { sendRequest } from '$helpers';
 import { json } from '@sveltejs/kit';
-import { ORG_API_URL } from '$env/static/private';
 
 /**@type {import('@sveltejs/kit').RequestHandler} */
 export const GET = async ({ cookies }) => {
@@ -10,7 +10,19 @@ export const GET = async ({ cookies }) => {
 		});
 	}
 
-	// const response = await fetch(`${ORG_API_URL}/me`);
+	const headers = {
+		Authorization: `Bearer ${accessToken}`
+	};
 
-	return json({ user: { username: 'Yuriy Gaitrov' } });
+	const response = await sendRequest(fetch, 'GET', '/consumer/me', headers);
+
+	const resJSON = await response.json();
+
+	if (!response.ok) {
+		return json({
+			user: null
+		});
+	}
+
+	return json(resJSON);
 };

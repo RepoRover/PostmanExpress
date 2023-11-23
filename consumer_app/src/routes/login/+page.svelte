@@ -74,6 +74,8 @@
 		return async ({ result }) => {
 			if (result.type === 'failure') {
 				notifications.error(result.data.message);
+			} else if (result.type === 'redirect') {
+				notifications.success('Success', 'You successfully logged in');
 			}
 			await applyAction(result);
 			isLoading = false;

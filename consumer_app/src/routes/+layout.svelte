@@ -3,6 +3,7 @@
 	import { Header, Footer } from '$components';
 	import { page } from '$app/stores';
 	import { Notifications } from '$components';
+	import { notifications } from '$stores';
 
 	export let data;
 
@@ -22,7 +23,28 @@
 	let headerShadowAlpha = 0;
 
 	// @ts-ignore
-	const user = data.user;
+	$: user = data.user;
+	$: userNotifications = user ? user.notifications : [];
+
+	$: console.log(userNotifications);
+
+	$: if (userNotifications) {
+		if (userNotifications.length > 0) {
+			userNotifications.forEach(
+				(
+					/** @type {{ title: string; parcel_name: string; parcel_status: string; parcel_id: string; }} */ notification
+				) => {
+					notifications.info(
+						notification.title,
+						notification.parcel_name,
+						10000,
+						notification.parcel_status,
+						notification.parcel_id
+					);
+				}
+			);
+		}
+	}
 
 	$: if (header) {
 		headerOpacity = scrollY / header.offsetHeight < 1 ? scrollY / header.offsetHeight : 1;

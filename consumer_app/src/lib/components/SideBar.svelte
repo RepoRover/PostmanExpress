@@ -1,6 +1,7 @@
 <script>
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { notifications } from '$stores';
 	import { X } from 'lucide-svelte';
 	import { tick, createEventDispatcher } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
@@ -68,7 +69,28 @@
 			{/each}
 		</div>
 		<div class="line"></div>
-		<div class="bottom"></div>
+		<div class="bottom">
+			<form
+				method="POST"
+				action="/api/auth/logout"
+				on:submit|preventDefault={async () => {
+					const response = await fetch('/api/auth/logout', {
+						method: 'POST',
+						headers: {
+							accept: 'application/json'
+						}
+					});
+					if (response.ok) {
+						notifications.success('Success', 'You successfully logged out');
+						invalidateAll();
+					}
+				}}
+			>
+				<button class="error">Log out</button>
+			</form>
+
+			<button class="error">Delete account</button>
+		</div>
 	</div>
 </nav>
 
@@ -168,6 +190,30 @@
 
 					&.active {
 						color: var(--accent-color);
+					}
+				}
+			}
+
+			.bottom {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				align-items: flex-start;
+				min-height: calc(100dvh - 32rem);
+				padding: 2.4rem 0.8rem;
+
+				.error {
+					background-color: transparent;
+					border: none;
+					font-size: 1.8rem;
+					color: var(--error);
+					font-family: inherit;
+					transition: all 0.3s;
+
+					&:hover {
+						color: var(--s-error);
+						cursor: pointer;
+						transform: translateX(0.5rem);
 					}
 				}
 			}

@@ -1,5 +1,8 @@
+import { API_KEY, APP_HEADER, ORG_API_URL } from '$env/static/private';
+
 const sendRequest = async (
-	/** @type {(arg0: string, arg1: { method: any; headers: {}; }) => any} */ fetch,
+	// @ts-ignore
+	fetch,
 	/** @type {string} */ method,
 	/** @type {string} */ url,
 	headers = {},
@@ -7,8 +10,8 @@ const sendRequest = async (
 ) => {
 	headers = {
 		...headers,
-		'x-api-key': process.env.API_KEY,
-		'x-application-type': process.env.APP_HEADER,
+		'x-api-key': API_KEY,
+		'x-application-type': APP_HEADER,
 		'Content-Type': 'application/json'
 	};
 
@@ -22,7 +25,7 @@ const sendRequest = async (
 		options.body = JSON.stringify(body);
 	}
 
-	return fetch(`${process.env.ORGANIZATION_API_URL}${url}`, options);
+	return fetch(`${ORG_API_URL}${url}`, options);
 };
 
 export default sendRequest;

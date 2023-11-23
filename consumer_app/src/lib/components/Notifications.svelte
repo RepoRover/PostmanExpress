@@ -10,8 +10,7 @@
 		{#each $notifications as notification (notification.id)}
 			<div
 				class="notification {notification.type}"
-				in:fade={{ duration: 300 }}
-				out:fly={{ duration: 300, x: -50 }}
+				transition:fade={{ duration: 300 }}
 				animate:flip={{ duration: 700 }}
 			>
 				<div class="top">
