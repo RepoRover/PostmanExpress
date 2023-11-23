@@ -27,6 +27,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"sass": "^1.69.5"
+		"sass": "^1.69.5",
+		"uuid": "^9.0.1"
 	}
 }

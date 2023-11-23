@@ -2,11 +2,17 @@
 	import { enhance, applyAction } from '$app/forms';
 	import { Eye, EyeOff } from 'lucide-svelte';
 	import { tick } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	let password = '';
 	let user_email = '';
 
 	let showPassword = false;
+	let isLoading = false;
+	let passwordValid = false;
+	const regex = /^[A-Za-z0-9$£@#&%]+$/;
+
+	$: user_email = user_email.trim();
+	$: password = password.trim();
 
 	/**
 	 * @type {HTMLInputElement}
@@ -23,6 +29,12 @@
 			showPassword ? textInput.focus() : passInput.focus();
 		});
 	};
+
+	const checkPwdValid = () => {
+		passwordValid = regex.test(password) ? true : false;
+
+		if (!passwordValid) console.log('Show message password invalid');
+	};
 </script>
 
 <div class="logo">
@@ -30,15 +42,17 @@
 	<p>Customer Log In</p>
 </div>
 <form
-	action=""
+	method="POST"
 	use:enhance={() => {
+		isLoading = true;
 		return async ({ result }) => {
 			await applyAction(result);
+			isLoading = false;
 		};
 	}}
 >
 	<div class="input-box">
-		<input name="email" id="email" type="email" placeholder="Email" bind:value={user_email} />
+		<input name="user_email" type="text" placeholder="Email" bind:value={user_email} />
 	</div>
 	<div class="password-block">
 		{#if showPassword}
@@ -49,11 +63,11 @@
 			>
 				<input
 					name="password"
-					id="password"
 					type="text"
 					placeholder="Password"
 					bind:value={password}
 					bind:this={textInput}
+					on:input={checkPwdValid}
 				/>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -69,11 +83,11 @@
 			>
 				<input
 					name="password"
-					id="password"
 					type="password"
 					placeholder="Password"
 					bind:value={password}
 					bind:this={passInput}
+					on:input={checkPwdValid}
 				/>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -83,7 +97,7 @@
 			</div>
 		{/if}
 	</div>
-	<button type="submit" class="submit-btn">Apply</button>
+	<button type="submit" class="submit-btn" disabled={!passwordValid}>Apply</button>
 </form>
 <div class="message">
 	<p>Don't have an account yet? <a href="/signup">Sign up</a></p>
@@ -176,6 +190,12 @@
 			&:hover {
 				background-color: var(--s-action-btn);
 				transform: scale(1.05);
+			}
+
+			&:disabled {
+				cursor: not-allowed;
+				transform: none;
+				background-color: var(--action-btn);
 			}
 		}
 	}

@@ -2,6 +2,7 @@
 	import '../styles/main.scss';
 	import { Header, Footer } from '$components';
 	import { page } from '$app/stores';
+	import { Notifications } from '$components';
 
 	export let data;
 
@@ -34,6 +35,8 @@
 <svelte:head>
 	<title>{$page.data.title ? `${$page.data.title}` : 'PostmanExpress'}</title>
 </svelte:head>
+
+<Notifications />
 
 {#if user}
 	<div

@@ -1,0 +1,120 @@
+<script>
+	import { notifications } from '$stores';
+	import { fade, fly } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+	import { X } from 'lucide-svelte';
+</script>
+
+{#if $notifications.length > 0}
+	<div class="notifications">
+		{#each $notifications as notification (notification.id)}
+			<div
+				class="notification {notification.type}"
+				in:fade={{ duration: 300 }}
+				out:fly={{ duration: 300, x: -50 }}
+				animate:flip={{ duration: 700 }}
+			>
+				<div class="top">
+					<p class="title">{notification.title}</p>
+					<button
+						class="close"
+						aria-label="Close notification"
+						on:click={() => {
+							notifications.remove(notification.id);
+						}}
+					>
+						<X focusable="false" aria-hidden color="var(--text-color)" />
+					</button>
+				</div>
+				<div class="bottom">
+					<p class="message">{notification.message}</p>
+					{#if notification.status}
+						<div class="status-box">
+							<div class="status-circle {notification.status}"></div>
+							<p class="status">
+								{notification.status.charAt(0).toUpperCase() + notification.status.slice(1)}
+							</p>
+						</div>
+					{/if}
+				</div>
+			</div>
+		{/each}
+	</div>
+{/if}
+
+<style lang="scss">
+	.notifications {
+		position: fixed;
+		display: flex;
+		flex-direction: column;
+		top: 2.8rem;
+		left: 3.6rem;
+		gap: 2.4rem;
+
+		.notification {
+			width: 24.5rem;
+			font-size: 1.2rem;
+			background-color: var(--s-bg-color);
+			border-radius: 12px;
+			padding: 1.6rem 4.4rem 1.6rem 2.4rem;
+			position: relative;
+
+			&.info {
+				border: 2px solid var(--border);
+			}
+			&.success {
+				border: 2px solid var(--action-btn);
+			}
+			&.warning {
+				border: 2px solid var(--en-route);
+			}
+			&.error {
+				border: 2px solid var(--error);
+			}
+
+			.top {
+				display: flex;
+				margin-bottom: 1.6rem;
+
+				.title {
+					color: var(--accent-color);
+					font-size: 1.4rem;
+				}
+			}
+			.bottom {
+				display: flex;
+				justify-content: space-between;
+
+				.status-box {
+					display: flex;
+					gap: 0.4rem;
+					align-items: center;
+
+					.status-circle {
+						height: 2rem;
+						width: 2rem;
+						border-radius: 100%;
+						&.delivered {
+							background-color: var(--delivered);
+						}
+					}
+				}
+			}
+
+			.close {
+				position: absolute;
+				top: 1rem;
+				right: 1rem;
+				background-color: transparent;
+				border: none;
+				cursor: pointer;
+				transition: all 0.3s;
+
+				&:hover {
+					color: var(--accent-color);
+					transform: scale(1.1);
+				}
+			}
+		}
+	}
+</style>
