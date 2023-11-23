@@ -3,32 +3,32 @@ import { v4 } from 'uuid';
 
 function createNotificationsStore() {
 	const { subscribe, update } = writable([
-		{
-			type: 'info',
-			title: 'New parcel comming',
-			message: 'Matheus sent you a parcel',
-			id: v4()
-		},
-		{
-			type: 'success',
-			title: 'Parcel status update',
-			message: 'Nike Shoues from Matheus',
-			status: 'delivered',
-			parcel_id: '123456',
-			id: v4()
-		},
-		{
-			type: 'warning',
-			title: 'Warning',
-			message: 'Invalid password',
-			id: v4()
-		},
-		{
-			type: 'error',
-			title: 'Error',
-			message: "Couldn't create new parcel",
-			id: v4()
-		}
+		// {
+		// 	type: 'info',
+		// 	title: 'New parcel comming',
+		// 	message: 'Matheus sent you a parcel',
+		// 	id: v4()
+		// },
+		// {
+		// 	type: 'success',
+		// 	title: 'Parcel status update',
+		// 	message: 'Nike Shoues from Matheus',
+		// 	status: 'delivered',
+		// 	parcel_id: '123456',
+		// 	id: v4()
+		// },
+		// {
+		// 	type: 'warning',
+		// 	title: 'Warning',
+		// 	message: 'Invalid password',
+		// 	id: v4()
+		// },
+		// {
+		// 	type: 'error',
+		// 	title: 'Error',
+		// 	message: "Couldn't create new parcel",
+		// 	id: v4()
+		// }
 	]);
 
 	function addNotification({

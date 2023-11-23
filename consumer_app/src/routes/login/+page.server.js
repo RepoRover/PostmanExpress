@@ -7,6 +7,14 @@ export const actions = {
 
 		const userEmail = form.get('user_email');
 		const password = form.get('password');
-		if (!userEmail) return fail(400, { message: 'Email required' });
+		if (!userEmail || !password) return fail(400, { message: 'Required fields missing' });
+
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve(fail(400, { status: 'fail', message: 'Bad request' }));
+			}, 2000); // Adjust the delay as needed
+		});
+		// return fail(400, { status: 'fail', message: 'Bad request' });
+		// return { status: 'success' };
 	}
 };

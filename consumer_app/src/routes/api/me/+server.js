@@ -10,7 +10,7 @@ export const GET = async ({ cookies }) => {
 		});
 	}
 
-	const response = await fetch(`${ORG_API_URL}/me`);
+	// const response = await fetch(`${ORG_API_URL}/me`);
 
 	return json({ user: { username: 'Yuriy Gaitrov' } });
 };

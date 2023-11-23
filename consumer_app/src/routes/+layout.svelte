@@ -21,6 +21,7 @@
 	let headerOpacity = 0;
 	let headerShadowAlpha = 0;
 
+	// @ts-ignore
 	const user = data.user;
 
 	$: if (header) {

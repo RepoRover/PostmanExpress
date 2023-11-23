@@ -1,9 +1,12 @@
 <script>
+	// @ts-nocheck
+
 	import { enhance, applyAction } from '$app/forms';
 	import { Eye, EyeOff } from 'lucide-svelte';
 	import { tick } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { notifications } from '$stores';
+	import { Loader } from '$components';
 	let password = '';
 	let user_email = '';
 
@@ -14,6 +17,7 @@
 
 	$: user_email = user_email.trim();
 	$: password = password.trim();
+	$: amntNotifications = $notifications.length;
 
 	/**
 	 * @type {HTMLInputElement}
@@ -32,19 +36,35 @@
 	};
 
 	const checkPwdValid = () => {
-		passwordValid = regex.test(password) ? true : false;
+		if (amntNotifications <= 2) {
+			if (password.length === 0) {
+				notifications.warning('Password is required');
+				return;
+			}
+			passwordValid = regex.test(password) ? true : false;
 
-		if (!passwordValid) {
-			let length = $notifications.length;
-			if (length === 0) {
+			if (!passwordValid) {
 				notifications.warning('Password contains invalid charachters');
 			}
 		}
 	};
+
+	const checkEmailLength = () => {
+		if (user_email.length === 0 && amntNotifications <= 2) {
+			notifications.warning('Email is required');
+		}
+	};
+
+	$: submitDisabled = !passwordValid || user_email.length === 0 ? true : false;
 </script>
 
 <div class="logo">
 	<h1>PostmanExpress</h1>
+	<div class="loader">
+		{#if isLoading}
+			<Loader></Loader>
+		{/if}
+	</div>
 	<p>Customer Log In</p>
 </div>
 <form
@@ -52,13 +72,22 @@
 	use:enhance={() => {
 		isLoading = true;
 		return async ({ result }) => {
+			if (result.type === 'failure') {
+				notifications.error(result.data.message);
+			}
 			await applyAction(result);
 			isLoading = false;
 		};
 	}}
 >
 	<div class="input-box">
-		<input name="user_email" type="text" placeholder="Email" bind:value={user_email} />
+		<input
+			name="user_email"
+			type="text"
+			placeholder="Email"
+			bind:value={user_email}
+			on:input={checkEmailLength}
+		/>
 	</div>
 	<div class="password-block">
 		{#if showPassword}
@@ -103,7 +132,7 @@
 			</div>
 		{/if}
 	</div>
-	<button type="submit" class="submit-btn" disabled={!passwordValid}>Apply</button>
+	<button type="submit" class="submit-btn" disabled={submitDisabled}>Apply</button>
 </form>
 <div class="message">
 	<p>Don't have an account yet? <a href="/signup">Sign up</a></p>
@@ -115,12 +144,18 @@
 		flex-direction: column;
 		align-items: center;
 		color: var(--accent-color);
+
+		.loader {
+			height: 2rem;
+			width: 4.5rem;
+		}
 		h1 {
 			font-weight: 300;
-			margin-bottom: 6.4rem;
+			margin-bottom: 3.2rem;
 		}
 
 		p {
+			margin-top: 1.2rem;
 			font-size: 1.8rem;
 		}
 	}

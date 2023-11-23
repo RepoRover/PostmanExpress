@@ -4,3 +4,4 @@ export { default as SectionLine } from './SectionLine.svelte';
 export { default as Footer } from './Footer.svelte';
 export { default as SideBar } from './SideBar.svelte';
 export { default as Notifications } from './Notifications.svelte';
+export { default as Loader } from './Loader.svelte';
