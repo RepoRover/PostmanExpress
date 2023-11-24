@@ -58,7 +58,7 @@
 	$: submitDisabled = !passwordValid || user_email.length === 0 ? true : false;
 </script>
 
-<div class="logo" in:fade={{ delay: 550, duration: 400 }} out:fade={{ duration: 350 }}>
+<div class="logo" in:fade={{ delay: 650, duration: 400 }} out:fade={{ duration: 350 }}>
 	<h1>PostmanExpress</h1>
 	<div class="loader">
 		{#if isLoading}
@@ -84,7 +84,7 @@
 >
 	<div
 		class="input-box"
-		in:fade={{ delay: 600, duration: 350 }}
+		in:fade={{ delay: 700, duration: 350 }}
 		out:fade={{ duration: 350, delay: 50 }}
 	>
 		<input
@@ -97,7 +97,7 @@
 	</div>
 	<div
 		class="password-block"
-		in:fade={{ delay: 650, duration: 350 }}
+		in:fade={{ delay: 750, duration: 350 }}
 		out:fade={{ duration: 350, delay: 100 }}
 	>
 		{#if showPassword}
@@ -117,7 +117,7 @@
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<button class="icon" type="button" on:click={switchPwdVisibility}>
-					<EyeOff></EyeOff>
+					<EyeOff size={19}></EyeOff>
 				</button>
 			</div>
 		{:else}
@@ -137,7 +137,7 @@
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<button class="icon" type="button" on:click={switchPwdVisibility}>
-					<Eye></Eye>
+					<Eye size={19}></Eye>
 				</button>
 			</div>
 		{/if}
@@ -146,13 +146,13 @@
 		type="submit"
 		class="submit-btn"
 		disabled={submitDisabled}
-		in:fade={{ delay: 700, duration: 350 }}
+		in:fade={{ delay: 800, duration: 350 }}
 		out:fade={{ duration: 350, delay: 150 }}>Apply</button
 	>
 </form>
 <div
 	class="message"
-	in:fade={{ delay: 750, duration: 350 }}
+	in:fade={{ delay: 850, duration: 350 }}
 	out:fade={{ duration: 350, delay: 200 }}
 >
 	<p>Don't have an account yet? <a href="/signup">Sign up</a></p>

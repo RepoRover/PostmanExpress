@@ -6,7 +6,6 @@
 	import { notifications } from '$stores';
 	import { Loader } from '$components';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
-
 	export let data;
 
 	/**
