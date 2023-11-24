@@ -242,7 +242,9 @@
 			<div class="select-action" on:click={() => (selectIsOpen = !selectIsOpen)}></div>
 			<div class="absolute">
 				<div class="select">
-					<div class="selected-value">{selectedLocationLabel}</div>
+					<div class="selected-value" class:selected={selectedLocationLabel !== 'Select an option'}>
+						{selectedLocationLabel}
+					</div>
 					{#if selectIsOpen}
 						<div class="options-container" transition:fade={{ duration: 200 }}>
 							{#each locationOptions as location (location.value)}
@@ -398,6 +400,10 @@
 				font-size: 1.8rem;
 				position: relative;
 				width: 100%;
+
+				.selected-value.selected {
+					color: var(--accent-color);
+				}
 
 				.options-container {
 					position: absolute;
