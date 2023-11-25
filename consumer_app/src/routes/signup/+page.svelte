@@ -1,26 +1,19 @@
 <script>
-	// @ts-nocheck
-
 	import { enhance, applyAction } from '$app/forms';
 	import { Eye, EyeOff, ChevronDown } from 'lucide-svelte';
 	import { tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 	import { notifications } from '$stores';
 	import { Loader } from '$components';
+
 	let password = '';
 	let user_email = '';
 	let password_confirm = '';
 	let user_name = '';
-
 	let showPassword = false;
 	let isLoading = false;
 	let passwordValid = false;
 	const regex = /^[A-Za-z0-9$£@#&%]+$/;
-
-	$: user_email = user_email.trim();
-	$: password = password.trim();
-	$: amntNotifications = $notifications.length;
-
 	/**
 	 * @type {HTMLInputElement}
 	 */
@@ -29,9 +22,34 @@
 	 * @type {HTMLInputElement}
 	 */
 	let passInput;
+	/**
+	 * @type {HTMLInputElement}
+	 */
 	let textInputConfirm;
+	/**
+	 * @type {HTMLInputElement}
+	 */
 	let passInputConfirm;
 	let passConfirmFieldLast = false;
+	let confirmTouched = false;
+	let selectIsOpen = false;
+	/**
+	 * @type {string | null}
+	 */
+	let user_location = null;
+	let selectedLocationLabel = 'Select an option';
+	let locationOptions = [
+		{ value: 'helsinki', label: 'Helsinki' },
+		{ value: 'oulu', label: 'Oulu' },
+		{ value: 'espoo', label: 'Espoo' },
+		{ value: 'turku', label: 'Turku' },
+		{ value: 'tampere', label: 'Tampere' }
+	];
+	let confirmValid = false;
+
+	$: user_email = user_email.trim();
+	$: password = password.trim();
+	$: amntNotifications = $notifications.length;
 
 	const checkConfirmFieldFocus = (e) => {
 		passConfirmFieldLast = e.target === textInputConfirm || e.target === passInputConfirm;
@@ -49,16 +67,48 @@
 	};
 
 	const checkPwdValid = () => {
-		if (amntNotifications <= 2) {
-			if (password.length === 0) {
-				notifications.warning('Password is required');
-				return;
-			}
-			passwordValid = regex.test(password) ? true : false;
+		if (
+			!$notifications.some((notification) => notification.message === 'Password is required') &&
+			password.length === 0
+		) {
+			passwordValid = false;
+			notifications.warning('Password is required');
+			return;
+		}
 
-			if (!passwordValid) {
-				notifications.warning('Password contains invalid charachters');
-			}
+		passwordValid = regex.test(password) ? true : false;
+
+		if (
+			!passwordValid &&
+			!$notifications.some(
+				(notification) => notification.message === 'Passwords contains invalid charachters'
+			)
+		) {
+			notifications.warning('Passwords contains invalid charachters');
+		}
+	};
+
+	const checkConfirmValid = () => {
+		if (
+			!$notifications.some(
+				(notification) => notification.message === 'Password confirm is required'
+			) &&
+			password_confirm.length === 0
+		) {
+			confirmValid = false;
+			notifications.warning('Password confirm is required');
+			return;
+		}
+
+		confirmValid = regex.test(password_confirm) ? true : false;
+
+		if (
+			!confirmValid &&
+			!$notifications.some(
+				(notification) => notification.message === 'Passwords confirm contains invalid charachters'
+			)
+		) {
+			notifications.warning('Passwords confirm contains invalid charachters');
 		}
 	};
 
@@ -68,27 +118,53 @@
 		}
 	};
 
-	// $: submitDisabled = !passwordValid || user_email.length === 0 ? true : false;
-
-	let selectIsOpen = false;
-	let user_location = null;
-	let selectedLocationLabel = 'Select an option';
-	let locationOptions = [
-		{ value: 'helsinki', label: 'Helsinki' },
-		{ value: 'oulu', label: 'Oulu' },
-		{ value: 'espoo', label: 'Espoo' },
-		{ value: 'turku', label: 'Turku' },
-		{ value: 'tampere', label: 'Tampere' }
-	];
-
-	const selectOption = (option) => {
+	const selectOption = (/** @type {{ value: string; label: string; }} */ option) => {
 		user_location = option.value;
 		selectedLocationLabel = option.label;
 		selectIsOpen = false;
 	};
+
+	/**
+	 * @param {HTMLDivElement} node
+	 */
+	function clickOutside(node) {
+		const handleClick = (/** @type {{ target: Node; defaultPrevented: any; }} */ event) => {
+			if (node && !node.contains(event.target) && !event.defaultPrevented) {
+				selectIsOpen = false;
+			}
+		};
+
+		// @ts-ignore
+		window.addEventListener('click', handleClick);
+
+		return {
+			destroy() {
+				// @ts-ignore
+				window.removeEventListener('click', handleClick);
+			}
+		};
+	}
+
+	const passwordMatchCheck = () => {
+		if (
+			password !== password_confirm &&
+			!$notifications.some((notification) => notification.message === "Passwords don't match") &&
+			confirmTouched
+		)
+			notifications.warning("Passwords don't match");
+	};
+
+	$: submitDisabled =
+		!passwordValid ||
+		!confirmValid ||
+		user_email.length === 0 ||
+		!user_location ||
+		user_name.length === 0
+			? true
+			: false;
 </script>
 
-<div class="logo" in:fade={{ delay: 550, duration: 350 }} out:fade={{ duration: 350 }}>
+<div class="logo" in:fade={{ delay: 450, duration: 350 }} out:fade={{ duration: 350 }}>
 	<h1>PostmanExpress</h1>
 	<div class="loader">
 		{#if isLoading}
@@ -105,14 +181,18 @@
 			if (result.type === 'failure') {
 				notifications.error(result.data.message);
 			} else if (result.type === 'redirect') {
-				notifications.success('Success', 'You successfully logged in');
+				notifications.success('Success', 'You successfully signed up');
 			}
 			await applyAction(result);
 			isLoading = false;
 		};
 	}}
 >
-	<div class="input-box" in:fade={{ delay: 600, duration: 350 }} out:fade={{ duration: 350 }}>
+	<div
+		class="input-box"
+		in:fade={{ delay: 475, duration: 350 }}
+		out:fade={{ duration: 350, delay: 25 }}
+	>
 		<div class="inner-box">
 			<div class="absolute">
 				<input
@@ -121,14 +201,22 @@
 					type="text"
 					placeholder="Full name"
 					bind:value={user_name}
-					on:input={checkConfirmFieldFocus}
+					on:input={(e) => {
+						if (
+							user_name.length === 0 &&
+							!$notifications.some((notification) => notification.message === 'Name is required')
+						) {
+							notifications.warning('Name is required');
+						}
+						checkConfirmFieldFocus(e);
+					}}
 				/>
 			</div>
 		</div>
 	</div>
 	<div
 		class="input-box"
-		in:fade={{ delay: 650, duration: 350 }}
+		in:fade={{ delay: 500, duration: 350 }}
 		out:fade={{ duration: 350, delay: 50 }}
 	>
 		<div class="inner-box">
@@ -149,14 +237,13 @@
 	</div>
 	<div
 		class="input-box"
-		in:fade={{ delay: 700, duration: 350 }}
-		out:fade={{ duration: 350, delay: 100 }}
+		in:fade={{ delay: 525, duration: 350 }}
+		out:fade={{ duration: 350, delay: 75 }}
 	>
 		<div class="inner-box overflow-hidden">
 			{#if showPassword}
 				<div class="absolute" in:fly={{ y: -40, duration: 400 }} out:fly={{ y: 40, duration: 400 }}>
 					<input
-						class="pwd-input"
 						name="password"
 						type="text"
 						placeholder="Password"
@@ -166,6 +253,7 @@
 							checkPwdValid();
 							checkConfirmFieldFocus(e);
 						}}
+						on:blur={passwordMatchCheck}
 					/>
 					<button class="icon" type="button" on:click={switchPwdVisibility}>
 						<EyeOff size={19}></EyeOff>
@@ -174,7 +262,6 @@
 			{:else}
 				<div class="absolute" in:fly={{ y: -40, duration: 400 }} out:fly={{ y: 40, duration: 400 }}>
 					<input
-						class="pwd-input"
 						name="password"
 						type="password"
 						placeholder="Password"
@@ -183,6 +270,58 @@
 						on:input={(e) => {
 							checkPwdValid();
 							checkConfirmFieldFocus(e);
+						}}
+						on:blur={passwordMatchCheck}
+					/>
+					<button class="icon" type="button" on:click={switchPwdVisibility}>
+						<Eye size={19}></Eye>
+					</button>
+				</div>
+			{/if}
+		</div>
+	</div>
+	<div
+		class="input-box"
+		in:fade={{ delay: 550, duration: 350 }}
+		out:fade={{ duration: 350, delay: 100 }}
+	>
+		<div class="inner-box overflow-hidden">
+			{#if showPassword}
+				<div class="absolute" in:fly={{ y: -40, duration: 400 }} out:fly={{ y: 40, duration: 400 }}>
+					<input
+						name="password_confirm"
+						type="text"
+						placeholder="Password confirm"
+						bind:value={password_confirm}
+						bind:this={textInputConfirm}
+						on:input={(e) => {
+							checkConfirmValid();
+							checkConfirmFieldFocus(e);
+						}}
+						on:blur={() => {
+							passwordMatchCheck();
+							confirmTouched = true;
+						}}
+					/>
+					<button class="icon" type="button" on:click={switchPwdVisibility}>
+						<EyeOff size={19}></EyeOff>
+					</button>
+				</div>
+			{:else}
+				<div class="absolute" in:fly={{ y: -40, duration: 400 }} out:fly={{ y: 40, duration: 400 }}>
+					<input
+						name="password_confirm"
+						type="password"
+						placeholder="Password confirm"
+						bind:value={password_confirm}
+						bind:this={passInputConfirm}
+						on:input={(e) => {
+							checkConfirmValid();
+							checkConfirmFieldFocus(e);
+						}}
+						on:blur={() => {
+							passwordMatchCheck();
+							confirmTouched = true;
 						}}
 					/>
 					<button class="icon" type="button" on:click={switchPwdVisibility}>
@@ -194,47 +333,9 @@
 	</div>
 	<div
 		class="input-box"
-		in:fade={{ delay: 750, duration: 350 }}
-		out:fade={{ duration: 350, delay: 150 }}
-	>
-		<div class="inner-box overflow-hidden">
-			{#if showPassword}
-				<div class="absolute" in:fly={{ y: -40, duration: 400 }} out:fly={{ y: 40, duration: 400 }}>
-					<input
-						class="pwd-input"
-						name="password"
-						type="text"
-						placeholder="Password confirm"
-						bind:value={password_confirm}
-						bind:this={textInputConfirm}
-						on:input={checkConfirmFieldFocus}
-					/>
-					<button class="icon" type="button" on:click={switchPwdVisibility}>
-						<EyeOff size={19}></EyeOff>
-					</button>
-				</div>
-			{:else}
-				<div class="absolute" in:fly={{ y: -40, duration: 400 }} out:fly={{ y: 40, duration: 400 }}>
-					<input
-						class="pwd-input"
-						name="password"
-						type="password"
-						placeholder="Password confirm"
-						bind:value={password_confirm}
-						bind:this={passInputConfirm}
-						on:input={checkConfirmFieldFocus}
-					/>
-					<button class="icon" type="button" on:click={switchPwdVisibility}>
-						<Eye size={19}></Eye>
-					</button>
-				</div>
-			{/if}
-		</div>
-	</div>
-	<div
-		class="input-box"
-		in:fade={{ delay: 800, duration: 350 }}
-		out:fade={{ duration: 350, delay: 200 }}
+		use:clickOutside
+		in:fade={{ delay: 575, duration: 350 }}
+		out:fade={{ duration: 350, delay: 125 }}
 	>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -270,15 +371,16 @@
 	<button
 		type="submit"
 		class="submit-btn"
-		in:fade={{ delay: 850, duration: 350 }}
-		out:fade={{ duration: 350, delay: 250 }}>Apply</button
+		disabled={submitDisabled}
+		in:fade={{ delay: 600, duration: 350 }}
+		out:fade={{ duration: 350, delay: 150 }}>Apply</button
 	>
 </form>
 
 <div
 	class="message"
-	in:fade={{ delay: 550, duration: 350 }}
-	out:fade={{ duration: 350, delay: 300 }}
+	in:fade={{ delay: 625, duration: 350 }}
+	out:fade={{ duration: 350, delay: 175 }}
 >
 	<p>Already have an account? <a href="/login">Log in</a></p>
 </div>
@@ -309,7 +411,7 @@
 		flex-direction: column;
 		align-items: center;
 		margin: 2rem auto 3.6rem auto;
-		width: 25.6rem;
+		width: 27rem;
 		gap: 2.4rem;
 
 		.input-box {
@@ -319,6 +421,12 @@
 			background-color: var(--s-bg-color);
 			border: 2px solid var(--border);
 			border-radius: 8px;
+			transition: transform 0.3s;
+			box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
+
+			&:focus-within {
+				transform: translateY(-0.5rem);
+			}
 
 			.inner-box {
 				width: 100%;
@@ -346,21 +454,7 @@
 					justify-content: space-between;
 				}
 
-				.text-input {
-					background-color: transparent;
-					border: none;
-					font-family: inherit;
-					outline: none;
-					font-size: 1.8rem;
-					color: var(--accent-color);
-					width: 100%;
-
-					&::placeholder {
-						color: var(--text-color);
-					}
-				}
-
-				.pwd-input {
+				input {
 					background-color: transparent;
 					border: none;
 					font-family: inherit;
@@ -474,7 +568,7 @@
 			&:disabled {
 				cursor: not-allowed;
 				transform: none;
-				background-color: var(--action-btn);
+				background-color: var(--dis-action-btn);
 			}
 		}
 	}
