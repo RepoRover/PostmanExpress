@@ -5,9 +5,9 @@
 	import { fly, fade } from 'svelte/transition';
 	import { notifications } from '$stores';
 	import { Loader } from '$components';
+
 	let password = '';
 	let user_email = '';
-
 	let showPassword = false;
 	let isLoading = false;
 	let passwordValid = false;

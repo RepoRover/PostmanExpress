@@ -1,5 +1,6 @@
 <script>
 	import { SideBar } from '$components';
+	import { onMount, tick } from 'svelte';
 
 	/**
 	 * @type {string}
@@ -7,13 +8,33 @@
 	export let username;
 	let isMenuOpen = false;
 
-	const openMenu = () => {
+	const openMenu = async () => {
+		await tick();
 		isMenuOpen = true;
 	};
 
-	const closeMenu = () => {
+	const closeMenu = async () => {
+		await tick();
 		isMenuOpen = false;
 	};
+
+	const handleKeyDown = (/** @type {{ preventDefault: () => void; key: string; }} */ event) => {
+		if (event.key === 'm') {
+			event.preventDefault();
+			if (isMenuOpen) {
+				closeMenu();
+			} else {
+				openMenu();
+			}
+		}
+	};
+
+	onMount(() => {
+		window.addEventListener('keydown', handleKeyDown);
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+		};
+	});
 </script>
 
 <header>

@@ -128,7 +128,7 @@
 	/**
 	 * @param {HTMLDivElement} node
 	 */
-	function clickOutside(node) {
+	const clickOutside = (node) => {
 		const handleClick = (/** @type {{ target: Node; defaultPrevented: any; }} */ event) => {
 			if (node && !node.contains(event.target) && !event.defaultPrevented) {
 				selectIsOpen = false;
@@ -144,7 +144,7 @@
 				window.removeEventListener('click', handleClick);
 			}
 		};
-	}
+	};
 
 	const stepForward = () => {
 		signUpStep++;
