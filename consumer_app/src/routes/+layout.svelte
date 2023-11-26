@@ -64,7 +64,20 @@
 <svelte:window bind:scrollY />
 
 <svelte:head>
-	<title>{$page.data.title ? `${$page.data.title}` : 'PostmanExpress'}</title>
+	{#if $page.url.pathname === '/login' || $page.url.pathname === '/signup'}
+		<style>
+			.page-content {
+				min-height: auto !important;
+			}
+		</style>
+	{/if}
+	<meta
+		name="description"
+		content={$page.data.description
+			? $page.data.description
+			: 'Track your parcels without any problems.'}
+	/>
+	<title>{$page.data.title ? `${$page.data.title} - PostmanExpress` : 'PostmanExpress'}</title>
 </svelte:head>
 
 <Notifications />
@@ -83,7 +96,7 @@
 {/if}
 <main>
 	{#if $page.url.pathname === '/login' || $page.url.pathname === '/signup'}
-		<div class="logo" in:fade={{ duration: 400 }} out:fade={{ duration: 350 }}>
+		<div class="logo" transition:fade={{ duration: 350 }}>
 			<h1>PostmanExpress</h1>
 		</div>
 	{/if}
@@ -124,10 +137,33 @@
 	main {
 		margin: 0 auto;
 		max-width: 144rem;
-		padding: 13.6rem 3.6rem 0 3.6rem;
+		padding: 13.6rem 8rem 3.6rem 8rem;
 
 		.page-content {
-			height: calc(100dvh - 13.6rem - 8.2rem);
+			min-height: calc(100dvh - 13.6rem - 8.2rem);
+			padding: 2rem 3.6rem;
+		}
+	}
+
+	@media only screen and (max-width: 45em) {
+		main {
+			padding: 9.6rem 4.8rem 2.4rem 4.8rem;
+
+			.page-content {
+				min-height: calc(100dvh - 9.6rem - 8.2rem);
+				padding: 1.2rem 2rem;
+			}
+		}
+	}
+
+	@media only screen and (max-width: 30em) {
+		main {
+			padding: 9.6rem 2rem 2.4rem 2rem;
+
+			.page-content {
+				min-height: calc(100dvh - 9.6rem - 8.2rem);
+				padding: 1.2rem 2rem;
+			}
 		}
 	}
 </style>

@@ -26,6 +26,12 @@ html {
 	font-size: 62.5%;
 }
 
+@media only screen and (max-width: 75em) {
+	html {
+		font-size: 56.25%;
+	}
+}
+
 body {
 	font-family: 'Barlow', sans-serif;
 	background-color: var(--bg-color);
@@ -65,5 +71,21 @@ a {
 	&:focus-visible {
 		outline: 2px solid var(--accent-color);
 		outline-offset: 2px;
+	}
+}
+
+.page-title {
+	h2 {
+		font-weight: 300;
+		font-size: 3.6rem;
+		color: var(--accent-color);
+	}
+}
+
+@media only screen and (max-width: 45em) {
+	.page-title {
+		h2 {
+			font-size: 3.2rem;
+		}
 	}
 }

@@ -31,7 +31,6 @@
 		justify-content: space-between;
 		font-size: 1.4rem;
 		padding: 2.4rem 0;
-		// border: 1px solid red;
 
 		.right,
 		.left {
@@ -53,6 +52,16 @@
 
 			p {
 				color: var(--accent-color);
+			}
+		}
+	}
+
+	@media only screen and (max-width: 30em) {
+		footer {
+			padding: 1.2rem 0;
+			.right,
+			.left {
+				gap: 1.2rem;
 			}
 		}
 	}

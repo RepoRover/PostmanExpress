@@ -119,6 +119,10 @@
 				}
 
 				.message {
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					width: 16rem;
 					&:link,
 					&:visited {
 						text-decoration: none;
@@ -140,6 +144,31 @@
 					color: var(--accent-color);
 					transform: scale(1.1);
 				}
+			}
+		}
+	}
+
+	@media only screen and (max-width: 45em) {
+		.notifications {
+			.notification {
+				width: 20rem;
+
+				.bottom {
+					.message {
+						width: 10rem;
+					}
+				}
+			}
+		}
+	}
+
+	@media only screen and (max-width: 30em) {
+		.notifications {
+			top: 2rem;
+			left: 2.4rem;
+
+			.notification {
+				width: 18rem;
 			}
 		}
 	}

@@ -99,4 +99,13 @@
 			}
 		}
 	}
+
+	@media only screen and (max-width: 30em) {
+		.header {
+			.inner-header {
+				padding: 0 2.4rem;
+				height: 6.4rem;
+			}
+		}
+	}
 </style>
