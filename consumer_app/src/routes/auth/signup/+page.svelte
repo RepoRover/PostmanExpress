@@ -154,15 +154,6 @@
 		signUpStep--;
 	};
 
-	const step1Check = () => {
-		console.log(username.trim().split(/\s+/).length);
-
-		if (username.split(/\s+/).length < 2) {
-			notifications.warning('Full name must contain at least two names');
-			return;
-		}
-	};
-
 	const step2Check = () => {
 		if (
 			password.length < 8 &&
@@ -250,13 +241,13 @@
 				</div>
 			</div>
 			<form
-				action="?/validateEmail"
+				action="?/validateUser"
 				method="post"
 				use:enhance={() => {
 					isLoading = true;
 					return async ({ result }) => {
 						if (result.type === 'failure') {
-							notifications.error(result.data.message);
+							notifications.warning(result.data.message);
 						} else {
 							stepForward();
 						}
@@ -266,11 +257,11 @@
 				}}
 			>
 				<input type="text" name="user_email" style:display="none" bind:value={user_email} />
+				<input type="text" name="username" style:display="none" bind:value={username} />
 				<button
 					type="submit"
 					class="submit-btn"
 					disabled={step1BtnDisabled}
-					on:click={step1Check}
 					in:fade={{ duration: 350, delay: 475 }}
 					out:fade={{ duration: 350, delay: 50 }}>Continue</button
 				>

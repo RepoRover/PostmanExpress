@@ -34,9 +34,14 @@ export const actions = {
 
 		throw redirect(303, '/');
 	},
-	validateEmail: async ({ request }) => {
+	validateUser: async ({ request }) => {
 		const form = await request.formData();
 		const user_email = form.get('user_email');
+		const username = form.get('username');
+
+		// @ts-ignore
+		if (username.split(/\s+/).length < 2)
+			return fail(400, { message: 'Full name must contain at least two names' });
 
 		if (!validateEmail(user_email)) return fail(400, { message: 'Invalid email' });
 
