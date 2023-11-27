@@ -238,7 +238,6 @@
 			.submit-btn {
 				width: 100%;
 			}
-			// }
 		}
 
 		.submit-btn {
