@@ -125,7 +125,7 @@
 		padding: 13.6rem 8rem 3.6rem 8rem;
 
 		.page-content {
-			min-height: calc(100dvh - 13.6rem - 8.2rem);
+			min-height: calc(100vh - 13.6rem - 8.2rem);
 			padding: 2rem 3.6rem;
 		}
 	}
@@ -135,7 +135,7 @@
 			padding: 9.6rem 4.8rem 2.4rem 4.8rem;
 
 			.page-content {
-				min-height: calc(100dvh - 9.6rem - 8.2rem);
+				min-height: calc(100vh - 9.6rem - 8.2rem);
 				padding: 1.2rem 2rem;
 			}
 		}
@@ -146,7 +146,7 @@
 			padding: 9.6rem 2rem 2.4rem 2rem;
 
 			.page-content {
-				min-height: calc(100dvh - 9.6rem - 8.2rem);
+				min-height: calc(100vh - 9.6rem - 8.2rem);
 				padding: 1.2rem 2rem;
 			}
 		}
