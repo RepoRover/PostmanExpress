@@ -155,6 +155,8 @@
 	};
 
 	const step1Check = () => {
+		console.log(username.trim().split(/\s+/).length);
+
 		if (username.split(/\s+/).length < 2) {
 			notifications.warning('Full name must contain at least two names');
 			return;

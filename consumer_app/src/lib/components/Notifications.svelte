@@ -35,7 +35,7 @@
 							}}>{notification.message}</a
 						>
 					{:else}
-						<p class="message">{notification.message}</p>
+						<p class="message" class:not-full={notification.status}>{notification.message}</p>
 					{/if}
 					{#if notification.status}
 						<div class="status-box">
@@ -119,10 +119,13 @@
 				}
 
 				.message {
-					white-space: nowrap;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					width: 16rem;
+					&.not-full {
+						width: 16rem;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+
 					&:link,
 					&:visited {
 						text-decoration: none;
@@ -155,7 +158,12 @@
 
 				.bottom {
 					.message {
-						width: 10rem;
+						&.not-full {
+							width: 16rem;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+						}
 					}
 				}
 			}
