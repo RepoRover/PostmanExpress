@@ -143,7 +143,7 @@
 			<button type="submit" class="submit-btn" disabled={submitDisabled}>Apply</button>
 		</form>
 		<div class="message">
-			<p>Don't have an account yet? <a href="/signup">Sign up</a></p>
+			<p>Don't have an account yet? <a href="/auth/signup">Sign up</a></p>
 		</div>
 	</div>
 </div>

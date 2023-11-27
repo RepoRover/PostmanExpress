@@ -4,14 +4,14 @@ import { redirect } from '@sveltejs/kit';
 export const load = async ({ data, url }) => {
 	const { user } = data || {};
 
-	const isAuthPage = url.pathname === '/login' || url.pathname === '/signup';
+	const isAuthPage = url.pathname === '/auth/login' || url.pathname === '/auth/signup';
 
 	if (user && isAuthPage) {
 		throw redirect(307, '/');
 	}
 
 	if (!user && !isAuthPage) {
-		throw redirect(307, '/login');
+		throw redirect(307, '/auth/login');
 	}
 
 	return { user };

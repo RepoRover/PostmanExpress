@@ -267,7 +267,6 @@
 				<button
 					type="submit"
 					class="submit-btn"
-					on:click={step1Check}
 					disabled={step1BtnDisabled}
 					in:fade={{ duration: 350, delay: 475 }}
 					out:fade={{ duration: 350, delay: 50 }}>Continue</button
@@ -278,7 +277,7 @@
 				in:fade={{ delay: 500, duration: 350 }}
 				out:fade={{ duration: 350, delay: 75 }}
 			>
-				<p>Already have an account? <a href="/login">Log in</a></p>
+				<p>Already have an account? <a href="/auth/login">Log in</a></p>
 			</div>
 		{:else if signUpStep === 1}
 			<div class="input-box" in:fade={{ duration: 350, delay: 400 }} out:fade={{ duration: 350 }}>
@@ -396,7 +395,7 @@
 				in:fade={{ delay: 475, duration: 350 }}
 				out:fade={{ duration: 350, delay: 75 }}
 			>
-				<p>Already have an account? <a href="/login">Log in</a></p>
+				<p>Already have an account? <a href="/auth/login">Log in</a></p>
 			</div>
 		{:else if signUpStep === 2}
 			<div
@@ -473,7 +472,7 @@
 				in:fade={{ delay: 475, duration: 350 }}
 				out:fade={{ duration: 350, delay: 50 }}
 			>
-				<p>Already have an account? <a href="/login">Log in</a></p>
+				<p>Already have an account? <a href="/auth/login">Log in</a></p>
 			</div>
 		{/if}
 	</div>

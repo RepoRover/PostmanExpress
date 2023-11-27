@@ -64,7 +64,7 @@
 <svelte:window bind:scrollY />
 
 <svelte:head>
-	{#if $page.url.pathname === '/login' || $page.url.pathname === '/signup'}
+	{#if $page.url.pathname === '/auth/login' || $page.url.pathname === '/auth/signup'}
 		<style>
 			.page-content {
 				min-height: auto !important;
@@ -95,11 +95,6 @@
 	{/if}
 {/if}
 <main>
-	{#if $page.url.pathname === '/login' || $page.url.pathname === '/signup'}
-		<div class="logo" transition:fade={{ duration: 350 }}>
-			<h1>PostmanExpress</h1>
-		</div>
-	{/if}
 	<div class="page-content">
 		<slot />
 	</div>
@@ -109,16 +104,6 @@
 </main>
 
 <style lang="scss">
-	.logo {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		color: var(--accent-color);
-		h1 {
-			font-weight: 300;
-			margin-bottom: 3.2rem;
-		}
-	}
 	.header {
 		height: 7.2rem;
 		z-index: 5;
