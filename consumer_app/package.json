@@ -10,7 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"deploy": "ORIGIN=https://svelte.consumer.salute-sir.com node -r dotenv/config build"
+		"deploy": "ORIGIN=https://svelte.consumer.salute-sir.com PORT=3010 node -r dotenv/config build"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",

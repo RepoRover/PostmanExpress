@@ -268,6 +268,7 @@
 					type="submit"
 					class="submit-btn"
 					disabled={step1BtnDisabled}
+					on:click={step1Check}
 					in:fade={{ duration: 350, delay: 475 }}
 					out:fade={{ duration: 350, delay: 50 }}>Continue</button
 				>
