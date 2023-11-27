@@ -1,0 +1,49 @@
+name: Postman.Express applications runner
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_ed25519
+          ssh-keyscan ${{ secrets.PVM_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Execute deployment commands
+        env:
+          HOST: ${{ secrets.PVM_HOST }}
+          USERNAME: ${{ secrets.PVM_USERNAME }}
+        run: |
+          ssh $USERNAME@$HOST << 'ENDSSH'
+            cd ~/Projects/PostmanExpress
+            git pull origin main || exit 1
+            cd consumer_app 
+            npm ci || exit 1
+            npm run build || exit 1
+            pm2 restart consumer_app_api || exit 1
+            cd ../driver_app
+            npm ci || exit 1
+            npm run build || exit 1
+            pm2 restart driver_app_api || exit 1
+            cd ../locker_app
+            npm ci || exit 1
+            npm run build || exit 1
+            pm2 restart locker_app_api || exit 1
+            cd ../organization_api
+            npm ci || exit 1
+            pm2 restart organization_api || exit 1
+          ENDSSH

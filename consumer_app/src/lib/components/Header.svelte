@@ -86,6 +86,8 @@
 			}
 
 			.menu-btn {
+				padding-inline: 0;
+				padding-block: 0;
 				background-color: transparent;
 				border: none;
 				color: var(--text-color);

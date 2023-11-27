@@ -505,12 +505,7 @@
 			background-color: var(--s-bg-color);
 			border: 2px solid var(--border);
 			border-radius: 8px;
-			transition: transform 0.3s;
 			box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-
-			&:focus-within {
-				transform: translateY(-0.5rem);
-			}
 
 			.inner-box {
 				width: 100%;
@@ -662,6 +657,7 @@
 		}
 
 		.submit-btn {
+			font-family: inherit;
 			z-index: 10;
 			background-color: var(--action-btn);
 			border: none;
