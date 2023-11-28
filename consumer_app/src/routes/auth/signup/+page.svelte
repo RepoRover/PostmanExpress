@@ -657,6 +657,7 @@
 		}
 
 		.submit-btn {
+			font-weight: 300;
 			font-family: inherit;
 			z-index: 10;
 			background-color: var(--action-btn);

@@ -6,7 +6,7 @@ export const GET = async ({ fetch, cookies }) => {
 	const accessToken = cookies.get('access_token');
 
 	if (!accessToken) {
-		return json({ status: 'unauthorized', message: 'Log in to access your active parcels' });
+		return json({ status: 'unauthorized', message: 'Log in to access your parcel history' });
 	}
 
 	let headers = {
