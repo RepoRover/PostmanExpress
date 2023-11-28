@@ -52,7 +52,8 @@
 
 		&:hover,
 		&:active {
-			transform: translateY(-0.5rem);
+			transform: scale(1.03);
+			box-shadow: 0 6px 16px 4px rgba(0, 0, 0, 0.25);
 			.bottom {
 				.more-info {
 					color: var(--accent-color);

@@ -122,11 +122,12 @@
 	main {
 		margin: 0 auto;
 		max-width: 144rem;
-		padding: 13.6rem 8rem 3.6rem 8rem;
+		padding: 9.6rem 8rem 3.6rem 8rem;
 
 		.page-content {
-			min-height: calc(100vh - 13.6rem - 8.2rem);
-			padding: 2rem 3.6rem;
+			min-height: calc(100vh - 9.6rem - 8.2rem);
+			padding: 2rem 3.6rem 0 3.6rem;
+			margin-bottom: 8.2rem;
 		}
 	}
 

@@ -6,3 +6,5 @@ export { default as SideBar } from './SideBar.svelte';
 export { default as Notifications } from './Notifications.svelte';
 export { default as Loader } from './Loader.svelte';
 export { default as ParcelItem } from './ParcelItem.svelte';
+export { default as AuthorizedParcelInfo } from './AuthorizedParcelInfo.svelte';
+export { default as UnauthorizedParcelInfo } from './UnauthorizedParcelInfo.svelte';

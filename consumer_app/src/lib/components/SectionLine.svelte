@@ -5,7 +5,7 @@
 		background-color: var(--section-sep);
 		height: 1px;
 		border-radius: 10px;
-		margin: 3.6rem 8rem;
+		margin: 0 8rem 3.6rem 8rem;
 	}
 	@media only screen and (max-width: 45em) {
 		.line {
