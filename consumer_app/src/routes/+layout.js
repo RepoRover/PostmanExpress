@@ -4,13 +4,18 @@ import { redirect } from '@sveltejs/kit';
 export const load = async ({ data, url }) => {
 	const { user } = data || {};
 
-	const isAuthPage = url.pathname === '/auth/login' || url.pathname === '/auth/signup';
+	// const parcelRoutePattern = /^\/parcel\/[a-zA-Z0-9]+$/;
+	const isOpenedForNoUser = url.pathname === '/auth/login' || url.pathname === '/auth/signup';
+	// const isParcelRoute = parcelRoutePattern.test(url.pathname);
 
-	if (user && isAuthPage) {
+	// console.log(url.pathname);
+	// console.log(isParcelRoute);
+
+	if (user && isOpenedForNoUser) {
 		throw redirect(307, '/');
 	}
 
-	if (!user && !isAuthPage) {
+	if (!user && !isOpenedForNoUser) {
 		throw redirect(307, '/auth/login');
 	}
 

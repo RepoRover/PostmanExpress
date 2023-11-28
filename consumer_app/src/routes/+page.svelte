@@ -20,26 +20,3 @@
 		<ParcelItem {parcel}></ParcelItem>
 	{/each}
 </div>
-
-<style lang="scss">
-	.items {
-		margin-top: 6.4rem;
-		display: grid;
-		// justify-content: space-around;
-		grid-template-columns: repeat(2, 1fr);
-		justify-items: center;
-		flex-wrap: wrap;
-		gap: 4.8rem;
-	}
-
-	@media only screen and (max-width: 67.5em) {
-		.items {
-			grid-template-columns: 1fr;
-		}
-	}
-	@media only screen and (max-width: 30em) {
-		.items {
-			margin-top: 3.2rem;
-		}
-	}
-</style>

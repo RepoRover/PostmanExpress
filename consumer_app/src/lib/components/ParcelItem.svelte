@@ -1,21 +1,26 @@
 <script>
 	import { Info } from 'lucide-svelte';
 	export let parcel;
+	$: if (
+		parcel.parcel_status === 'en route to the warehouse' ||
+		parcel.parcel_status === 'en route to the pickup location'
+	)
+		parcel.parcel_status = 'en route';
 
 	let statusMap = {
 		'awaiting drop-off': 'awaiting-drop-off',
 		'prepared for delivery': 'prepared-for-delivery',
 		'at warehouse': 'at-warehouse',
-		'en route to the warehouse': 'en-route',
-		'en route to the pickup location': 'en-route',
-		'ready for pick up': 'ready-for-pick-up'
+		'en route': 'en-route',
+		'ready for pickup': 'ready-for-pick-up',
+		delivered: 'delivered'
 	};
 </script>
 
 <a href="/parcels/{parcel.parcel_id}">
 	<div class="top">
 		<p class="parcel-name"><span>Name: </span>{parcel.parcel_name}</p>
-		<p class="last-updated"><span>Last updated: </span>{parcel.last_status_date}</p>
+		<p class="last-updated"><span>Updated: </span>{parcel.last_status_date}</p>
 	</div>
 	<div class="bottom">
 		<div class="status">
@@ -151,6 +156,9 @@
 					}
 					&.ready-for-pick-up {
 						background-color: var(--ready-for-pick-up);
+					}
+					&.delivered {
+						background-color: var(--delivered);
 					}
 				}
 			}
