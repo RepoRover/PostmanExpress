@@ -27,4 +27,9 @@
 	.parcel-info-container {
 		padding: 3.6rem 6.4rem 0;
 	}
+	@media only screen and (max-width: 45em) {
+		.parcel-info-container {
+			padding: 3.6rem 3.2rem 0;
+		}
+	}
 </style>
