@@ -22,3 +22,9 @@
 		<UnauthorizedParcelInfo {parcelData} />
 	{/if}
 </div>
+
+<style lang="scss">
+	.parcel-info-container {
+		padding: 3.6rem 6.4rem 0;
+	}
+</style>

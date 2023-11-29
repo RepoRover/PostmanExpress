@@ -1,20 +1,14 @@
 <script>
 	import { Info } from 'lucide-svelte';
+	import { statusMap } from '$helpers/const.js';
+
 	export let parcel;
+
 	$: if (
 		parcel.parcel_status === 'en route to the warehouse' ||
 		parcel.parcel_status === 'en route to the pickup location'
 	)
 		parcel.parcel_status = 'en route';
-
-	let statusMap = {
-		'awaiting drop-off': 'awaiting-drop-off',
-		'prepared for delivery': 'prepared-for-delivery',
-		'at warehouse': 'at-warehouse',
-		'en route': 'en-route',
-		'ready for pickup': 'ready-for-pick-up',
-		delivered: 'delivered'
-	};
 </script>
 
 <a href="/parcels/{parcel.parcel_id}">

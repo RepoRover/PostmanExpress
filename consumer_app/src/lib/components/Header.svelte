@@ -1,6 +1,8 @@
 <script>
+	import { page } from '$app/stores';
 	import { SideBar } from '$components';
 	import { onMount, tick } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	/**
 	 * @type {string}
@@ -37,20 +39,24 @@
 	});
 </script>
 
-<header>
+<header in:fade={{ duration: 350, delay: 350 }} out:fade={{ duration: 350 }}>
 	<div class="header">
 		<div class="inner-header">
 			<div class="logo">
 				<a class="text text-logo" href="/">PostmanExpress</a>
 			</div>
 			<div class="menu">
-				<button on:click={openMenu} class="text menu-btn">Menu</button>
+				{#if $page.data.user}
+					<button on:click={openMenu} class="text menu-btn">Menu</button>
+				{:else}
+					<a href="/auth/login" class="text menu-btn">Login</a>
+				{/if}
 			</div>
 		</div>
 	</div>
 </header>
 
-{#if isMenuOpen}
+{#if isMenuOpen && username !== null}
 	<SideBar {username} {isMenuOpen} on:closeMenu={closeMenu}></SideBar>
 {/if}
 

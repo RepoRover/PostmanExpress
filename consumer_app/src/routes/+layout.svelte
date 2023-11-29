@@ -82,23 +82,25 @@
 
 <Notifications />
 
-{#if user}
+<!-- {#if user} -->
+{#if $page.url.pathname !== '/auth/login' && $page.url.pathname !== '/auth/signup'}
 	<div
 		class="header"
 		bind:this={header}
 		style:opacity={headerOpacity}
 		style:box-shadow={`0 8px 20px rgba(0, 0, 0, ${headerShadowAlpha})`}
 	></div>
-	<Header username={user.username}></Header>
+	<Header username={user ? user.username : null}></Header>
 	{#if isLoading}
 		<div class="loader"><Loader></Loader></div>
 	{/if}
 {/if}
+<!-- {/if} -->
 <main>
 	<div class="page-content">
 		<slot />
 	</div>
-	{#if user}
+	{#if $page.url.pathname !== '/auth/login' && $page.url.pathname !== '/auth/signup'}
 		<Footer></Footer>
 	{/if}
 </main>

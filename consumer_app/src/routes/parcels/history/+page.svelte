@@ -20,5 +20,3 @@
 		<ParcelItem {parcel}></ParcelItem>
 	{/each}
 </div>
-
-<style lang="scss"></style>
