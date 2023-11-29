@@ -159,6 +159,8 @@
 						color: var(--text-color);
 						display: none;
 						left: -3.2rem;
+						top: 50%;
+						transform: translateY(-40%);
 						transition: all 0.3s;
 						cursor: pointer;
 
@@ -261,7 +263,7 @@
 					}
 					.wrapper {
 						.icon {
-							display: flex;
+							display: block;
 						}
 					}
 				}
