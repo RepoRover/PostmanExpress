@@ -158,7 +158,7 @@
 						border: none;
 						color: var(--text-color);
 						display: none;
-						left: -3.2rem;
+						left: -3.6rem;
 						top: 50%;
 						transform: translateY(-40%);
 						transition: all 0.3s;
