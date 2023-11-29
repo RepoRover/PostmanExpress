@@ -6,9 +6,14 @@
 
 	export let parcelData;
 
+	$: if (
+		parcelData.parcel_status === 'en route to the warehouse' ||
+		parcelData.parcel_status === 'en route to the pickup location'
+	)
+		parcelData.parcel_status = 'en route';
+
 	let timestampsOpen = true;
 	let isIdOpen = false;
-	let isNameOpen = false;
 
 	const openCloseTimestamps = async () => {
 		await tick();
@@ -17,14 +22,6 @@
 
 	const idSwitch = () => {
 		isIdOpen = !isIdOpen;
-		if (isNameOpen) isNameOpen = false;
-
-		console.log(isIdOpen, isNameOpen);
-	};
-
-	const nameSwitch = () => {
-		isNameOpen = !isNameOpen;
-		if (isIdOpen) isIdOpen = false;
 	};
 </script>
 
@@ -39,23 +36,13 @@
 			<div class="contents">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="wrapper" on:click={idSwitch}>
-					<button class="icon"><Eye size={18} /></button>
+				<div class="wrapper">
+					<button class="icon" on:click={idSwitch}><Eye size={18} /></button>
 					<p class="parcel-id">{parcelData.parcel_id}</p>
-					<span class="full" style:display={isIdOpen ? 'inline-block' : 'none'}
-						>{parcelData.parcel_id}</span
-					>
+					<span class="full" class:shown={isIdOpen}>{parcelData.parcel_id}</span>
 				</div>
 
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="wrapper" on:click={nameSwitch}>
-					<button class="icon"><Eye size={18} /></button>
-					<p class="parcel-name">{parcelData.parcel_name}</p>
-					<span class="full" style:display={isIdOpen ? 'inline-block' : 'none'}
-						>{parcelData.parcel_name}</span
-					>
-				</div>
+				<p class="parcel-name">{parcelData.parcel_name}</p>
 
 				<p class="status {statusMap[parcelData.parcel_status]}">
 					{parcelData.parcel_status.charAt(0).toUpperCase() + parcelData.parcel_status.slice(1)}
@@ -102,6 +89,7 @@
 
 <style lang="scss">
 	.parcel-info {
+		overflow: hidden;
 		font-size: 1.8rem;
 		background-color: var(--s-bg-color);
 		border: 2px solid var(--border);
@@ -110,16 +98,18 @@
 		grid-template-columns: repeat(2, 1fr);
 		padding: 3.2rem;
 		box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-		gap: 3.6rem;
+		gap: 3.2rem;
 
 		.left {
 			display: flex;
 			flex-direction: column;
 			gap: 3.2rem;
 		}
+
 		.left-bottom {
 			display: flex;
 			flex-direction: column;
+
 			button {
 				background-color: transparent;
 				border: none;
@@ -128,7 +118,7 @@
 				font-weight: inherit;
 				font-family: inherit;
 				display: flex;
-				max-width: max-content;
+				max-width: fit-content;
 				gap: 0.8rem;
 				cursor: pointer;
 				padding-inline: 0;
@@ -163,28 +153,33 @@
 					position: relative;
 
 					.icon {
+						position: absolute;
 						background-color: transparent;
 						border: none;
 						color: var(--text-color);
 						display: none;
+						left: -3.2rem;
+						transition: all 0.3s;
+						cursor: pointer;
+
+						&:hover {
+							color: var(--accent-color);
+						}
 					}
 
 					.full {
+						display: none;
 						position: absolute;
-						left: 3.2rem;
+						left: 0;
 						background-color: var(--s-bg-color);
-						border-radius: 8px;
-						border: 2px solid var(--border);
-						padding: 1.2rem;
 						z-index: 10;
-						transform: translateY(-1.2rem);
+						width: 20rem;
 					}
 				}
 
 				p {
 					white-space: nowrap;
 
-					&.parcel-name,
 					&.names {
 						overflow: hidden;
 						text-overflow: ellipsis;
@@ -240,11 +235,17 @@
 		.parcel-info {
 			grid-template-columns: 1fr;
 		}
-
+	}
+	@media only screen and (max-width: 39em) {
 		.parcel-id {
 			overflow: hidden;
 			text-overflow: ellipsis;
-			max-width: 25rem;
+			max-width: 18rem;
+		}
+		.parcel-name {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 18rem;
 		}
 
 		.parcel-info {
@@ -252,8 +253,49 @@
 			.right {
 				.contents {
 					.wrapper {
+						.full {
+							&.shown {
+								display: inline-block;
+							}
+						}
+					}
+					.wrapper {
 						.icon {
 							display: flex;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@media only screen and (max-width: 30em) {
+		.parcel-id {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 12rem;
+		}
+
+		.parcel-name {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 12rem;
+		}
+		.parcel-info {
+			gap: 2.4rem;
+			padding: 2rem;
+			.left {
+				gap: 2.4rem;
+			}
+			.left-top,
+			.right {
+				.placeholders,
+				.contents {
+					gap: 2.4rem;
+
+					p {
+						&.names {
+							width: 12rem;
 						}
 					}
 				}

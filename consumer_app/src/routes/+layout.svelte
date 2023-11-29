@@ -133,7 +133,7 @@
 		}
 	}
 
-	@media only screen and (max-width: 45em) {
+	@media only screen and (max-width: 48em) {
 		main {
 			padding: 9.6rem 4.8rem 2.4rem 4.8rem;
 
@@ -150,7 +150,7 @@
 
 			.page-content {
 				min-height: calc(100vh - 9.6rem - 8.2rem);
-				padding: 1.2rem 2rem;
+				padding: 1.2rem 0;
 			}
 		}
 	}

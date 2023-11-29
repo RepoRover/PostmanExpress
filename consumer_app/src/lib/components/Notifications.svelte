@@ -151,7 +151,7 @@
 		}
 	}
 
-	@media only screen and (max-width: 45em) {
+	@media only screen and (max-width: 48em) {
 		.notifications {
 			.notification {
 				width: 20rem;

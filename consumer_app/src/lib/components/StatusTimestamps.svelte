@@ -1,4 +1,6 @@
 <script>
+	import { fade } from 'svelte/transition';
+
 	export let status_timestamps;
 
 	$: status_timestamps.reverse();
@@ -23,7 +25,9 @@
 				class:first={index === status_timestamps.length - 1}
 				class:last={index === 0}
 			>
-				{timestamp.status.charAt(0).toUpperCase() + timestamp.status.slice(1)}
+				<span>
+					{timestamp.status.charAt(0).toUpperCase() + timestamp.status.slice(1)}
+				</span>
 			</p>
 			<p class="timestamp">at {timestamp.time} on {convertDateFormat(timestamp.date)}</p>
 		</div>
@@ -32,8 +36,8 @@
 
 <style lang="scss">
 	.timestamps {
+		// width: fit-content;
 		padding: 3.2rem 0 0 6.4rem;
-
 		display: flex;
 		flex-direction: column;
 		gap: 3.6rem;
@@ -48,6 +52,10 @@
 				position: relative;
 				color: var(--accent-color);
 
+				span {
+					white-space: nowrap;
+				}
+
 				&::after {
 					content: '';
 					height: 1rem;
@@ -58,6 +66,7 @@
 					top: 50%;
 					left: -3.4rem;
 					transform: translateY(-50%);
+					z-index: 2;
 				}
 
 				&::before {
@@ -66,8 +75,9 @@
 					width: 1px;
 					position: absolute;
 					background-color: var(--section-sep);
-					top: 80%;
+					top: 76%;
 					left: -3rem;
+					z-index: 1;
 				}
 
 				&.first {
@@ -86,6 +96,25 @@
 			.timestamp {
 				font-size: 1.2rem;
 			}
+		}
+	}
+
+	// @media only screen and (max-width: 39em) {
+	// 	// .timestamp-box {
+	// 	// 	.status {
+	// 	// 		span {
+	// 	// 			display: inline-block;
+	// 	// 			white-space: nowrap;
+	// 	// 			overflow: hidden;
+	// 	// 			text-overflow: ellipsis;
+	// 	// 			width: 22rem;
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// }
+	@media only screen and (max-width: 30em) {
+		.timestamps {
+			padding: 2.4rem 0 0 4.8rem;
 		}
 	}
 </style>

@@ -31,7 +31,6 @@
 		&:visited {
 			text-decoration: none;
 			display: flex;
-			grid-template-columns: repeat(2, 1fr);
 			flex-direction: column;
 			width: 42.5rem;
 			padding: 2.4rem 3.6rem;
@@ -71,7 +70,26 @@
 				width: 48rem;
 			}
 		}
-		@media only screen and (max-width: 45em) {
+		@media only screen and (max-width: 48em) {
+			&:link,
+			&:visited {
+				padding: 2rem 3.2rem;
+				gap: 2.4rem;
+				.top,
+				.bottom {
+					.parcel-name {
+						width: 12rem;
+					}
+				}
+			}
+
+			.parcel-name {
+				span {
+					display: none;
+				}
+			}
+		}
+		@media only screen and (max-width: 39em) {
 			&:link,
 			&:visited {
 				width: 32rem;

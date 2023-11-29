@@ -14,5 +14,10 @@
 @media only screen and (max-width: 30em) {
 	.items {
 		margin-top: 3.2rem;
+		gap: 2.4rem;
+	}
+
+	.page-title {
+		padding-left: 2rem;
 	}
 }
