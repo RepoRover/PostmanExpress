@@ -36,7 +36,6 @@
 
 <style lang="scss">
 	.timestamps {
-		// width: fit-content;
 		padding: 3.2rem 0 0 6.4rem;
 		display: flex;
 		flex-direction: column;
@@ -71,11 +70,11 @@
 
 				&::before {
 					content: '';
-					height: 6.8rem;
+					height: 7.8rem;
 					width: 1px;
 					position: absolute;
 					background-color: var(--section-sep);
-					top: 76%;
+					top: 55%;
 					left: -3rem;
 					z-index: 1;
 				}
