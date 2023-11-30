@@ -177,6 +177,12 @@
 
 			.notification {
 				width: 18rem;
+				padding: 1.2rem 3.6rem 1.2rem 2rem;
+
+				button {
+					padding-inline: 0;
+					padding-block: 0;
+				}
 			}
 		}
 	}

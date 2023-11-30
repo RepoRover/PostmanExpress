@@ -1,9 +1,5 @@
 <script>
-	import { fade } from 'svelte/transition';
-
 	export let status_timestamps;
-
-	$: status_timestamps.reverse();
 
 	const convertDateFormat = (/** @type {string} */ dateStr) => {
 		let parts = dateStr.split('.');
@@ -24,6 +20,7 @@
 				class="status"
 				class:first={index === status_timestamps.length - 1}
 				class:last={index === 0}
+				class:delivered={timestamp.status === 'delivered'}
 			>
 				<span>
 					{timestamp.status.charAt(0).toUpperCase() + timestamp.status.slice(1)}
@@ -89,6 +86,12 @@
 					&::after {
 						background-color: var(--awaiting-drop-off);
 					}
+
+					&.delivered {
+						&::after {
+							background-color: var(--delivered);
+						}
+					}
 				}
 			}
 
@@ -97,20 +100,6 @@
 			}
 		}
 	}
-
-	// @media only screen and (max-width: 39em) {
-	// 	// .timestamp-box {
-	// 	// 	.status {
-	// 	// 		span {
-	// 	// 			display: inline-block;
-	// 	// 			white-space: nowrap;
-	// 	// 			overflow: hidden;
-	// 	// 			text-overflow: ellipsis;
-	// 	// 			width: 22rem;
-	// 	// 		}
-	// 	// 	}
-	// 	// }
-	// }
 	@media only screen and (max-width: 30em) {
 		.timestamps {
 			padding: 2.4rem 0 0 4.8rem;
