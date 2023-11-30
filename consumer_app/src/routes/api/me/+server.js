@@ -31,7 +31,10 @@ export const GET = async ({ cookies }) => {
 export const DELETE = async ({ fetch, cookies }) => {
 	const accessToken = cookies.get('access_token');
 	if (!accessToken) {
-		return json({ status: 'fail', message: 'Please log in to delete your account.' });
+		return json(
+			{ status: 'fail', message: 'Please log in to delete your account.' },
+			{ status: 400 }
+		);
 	}
 
 	const headers = {
@@ -43,7 +46,7 @@ export const DELETE = async ({ fetch, cookies }) => {
 	const resJSON = await response.json();
 
 	if (!response.ok) {
-		return json(resJSON);
+		return json(resJSON, { status: response.status });
 	}
 
 	cookies.delete('access_token', { path: '/' });

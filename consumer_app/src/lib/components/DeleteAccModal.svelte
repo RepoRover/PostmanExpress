@@ -1,6 +1,7 @@
 <script>
 	import { invalidateAll } from '$app/navigation';
 	import { notifications } from '$stores';
+	import { redirect } from '@sveltejs/kit';
 	import { createEventDispatcher, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
@@ -59,6 +60,7 @@
 				});
 
 				const resJSON = await response.json();
+
 				if (response.ok) {
 					await invalidateAll();
 					notifications.success('Success', 'You successfully deleted account.');
