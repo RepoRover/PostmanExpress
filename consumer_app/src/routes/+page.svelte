@@ -1,7 +1,6 @@
 <script>
 	import { notifications } from '$stores';
-	import { ParcelItem } from '$components';
-	import { fade } from 'svelte/transition';
+	import { ParcelItem, PageContentFade, NoParcel } from '$components';
 
 	export let data;
 
@@ -11,12 +10,17 @@
 	}
 </script>
 
-<div class="page-title" in:fade={{ duration: 350, delay: 350 }} out:fade={{ duration: 350 }}>
-	<h2>Active Parcels</h2>
-</div>
-
-<div class="items" in:fade={{ duration: 350, delay: 650 }} out:fade={{ duration: 350 }}>
-	{#each user_parcels as parcel}
-		<ParcelItem {parcel}></ParcelItem>
-	{/each}
-</div>
+<PageContentFade>
+	<h2 slot="title">Active Parcels</h2>
+	<div slot="content">
+		{#if user_parcels.length > 0}
+			<div class="items">
+				{#each user_parcels as parcel}
+					<ParcelItem {parcel}></ParcelItem>
+				{/each}
+			</div>
+		{:else}
+			<NoParcel />
+		{/if}
+	</div>
+</PageContentFade>

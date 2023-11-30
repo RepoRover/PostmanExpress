@@ -8,7 +8,6 @@ export const load = async ({ data, url, params }) => {
 
 	const isOpenedForNoUser = url.pathname === '/auth/login' || url.pathname === '/auth/signup';
 
-	console.log(isSingleParcelRoute);
 	if (user && isOpenedForNoUser) {
 		throw redirect(307, '/');
 	}

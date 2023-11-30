@@ -5,6 +5,7 @@
 	--s-bg-color: #222124;
 	--t-bg-color: #28272b;
 	--text-color: #cdcdcd;
+	--not-found-color: #868686;
 	--accent-color: #ffffff;
 	--delivered: #00ff47;
 	--ready-for-pick-up: #000aff;
@@ -74,21 +75,5 @@ a {
 	&:focus-visible {
 		outline: 2px solid var(--accent-color);
 		outline-offset: 2px;
-	}
-}
-
-.page-title {
-	h2 {
-		font-weight: 300;
-		font-size: 3.6rem;
-		color: var(--accent-color);
-	}
-}
-
-@media only screen and (max-width: 48em) {
-	.page-title {
-		h2 {
-			font-size: 3.2rem;
-		}
 	}
 }

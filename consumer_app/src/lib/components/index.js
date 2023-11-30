@@ -11,3 +11,5 @@ export { default as UnauthorizedParcelInfo } from './UnauthorizedParcelInfo.svel
 export { default as StatusTimestamps } from './StatusTimestamps.svelte';
 export { default as Overlay } from './Overlay.svelte';
 export { default as DeleteAccModal } from './DeleteAccModal.svelte';
+export { default as PageContentFade } from './PageContentFade.svelte';
+export { default as NoParcel } from './NoParcel.svelte';

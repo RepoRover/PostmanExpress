@@ -26,3 +26,27 @@ export const GET = async ({ cookies }) => {
 
 	return json(resJSON);
 };
+
+/**@type {import('@sveltejs/kit').RequestHandler} */
+export const DELETE = async ({ fetch, cookies }) => {
+	const accessToken = cookies.get('access_token');
+	if (!accessToken) {
+		return json({ status: 'fail', message: 'Please log in to delete your account.' });
+	}
+
+	const headers = {
+		Authorization: `Bearer ${accessToken}`
+	};
+
+	const response = await sendRequest(fetch, 'DELETE', '/consumer/me', headers);
+
+	const resJSON = await response.json();
+
+	if (!response.ok) {
+		return json(resJSON);
+	}
+
+	cookies.delete('access_token', { path: '/' });
+
+	return json(resJSON);
+};

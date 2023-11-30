@@ -5,7 +5,6 @@
 	import { X } from 'lucide-svelte';
 	import { tick, createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';
-	import { Overlay, DeleteAccModal } from '$components';
 
 	const dispatcher = createEventDispatcher();
 	/**
@@ -56,12 +55,6 @@
 	</style>
 </svelte:head>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- <div class="overlay" on:click={closeMenu} transition:fade={{ duration: 350 }}></div> -->
-
-<!-- <Overlay on:closeMenu={closeMenu} overlayLocation="menu"></Overlay> -->
-
 <nav transition:fly={{ x: 196, duration: 350 }} class:opened={isMenuOpen}>
 	<div class="inner-nav">
 		<div class="top">
@@ -91,7 +84,7 @@
 					if (response.ok) {
 						closeMenu();
 						await invalidateAll();
-						notifications.success('Success', 'You successfully logged out');
+						notifications.success('Success', 'You successfully logged out.');
 					}
 				}}
 			>
@@ -204,7 +197,7 @@
 				justify-content: space-between;
 				align-items: flex-start;
 				min-height: calc(100dvh - 32rem);
-				padding: 2.4rem 0.8rem;
+				padding: 2.4rem 1.2rem;
 
 				.error {
 					background-color: transparent;
@@ -213,6 +206,7 @@
 					color: var(--error);
 					font-family: inherit;
 					transition: all 0.3s;
+					padding-inline: 0;
 
 					&:hover {
 						color: var(--s-error);

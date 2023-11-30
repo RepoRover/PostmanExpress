@@ -47,13 +47,8 @@
 
 	<div class="actions">
 		<button class="cancel" on:click={closeAccDeleteModal}>Cancel</button>
-		<form>
-			<button class="delete" type="submit" disabled={!confirmed}>Delete</button>
-		</form>
-	</div>
-</div>
-
-<!-- 			method="DELETE"
+		<form
+			method="DELETE"
 			action="/api/me"
 			on:submit|preventDefault={async () => {
 				const response = await fetch('/api/me', {
@@ -62,11 +57,20 @@
 						accept: 'application/json'
 					}
 				});
+
+				const resJSON = await response.json();
 				if (response.ok) {
 					await invalidateAll();
-					notifications.success('Success', 'You successfully logged out');
+					notifications.success('Success', 'You successfully deleted account.');
+				} else {
+					notifications.error(resJSON.message, 5000);
 				}
-			}} -->
+			}}
+		>
+			<button class="delete" type="submit" disabled={!confirmed}>Delete</button>
+		</form>
+	</div>
+</div>
 
 <style lang="scss">
 	.delete-acc-modal {

@@ -1,5 +1,5 @@
 <script>
-	import { ParcelItem } from '$components';
+	import { ParcelItem, NoParcel, PageContentFade } from '$components';
 	import { notifications } from '$stores';
 	import { fade } from 'svelte/transition';
 
@@ -11,12 +11,18 @@
 	}
 </script>
 
-<div class="page-title" in:fade={{ duration: 350, delay: 350 }} out:fade={{ duration: 350 }}>
-	<h2>Parcel History</h2>
-</div>
+<PageContentFade>
+	<h2 slot="title">Parcel History</h2>
 
-<div class="items" in:fade={{ duration: 350, delay: 650 }} out:fade={{ duration: 350 }}>
-	{#each user_parcels as parcel}
-		<ParcelItem {parcel}></ParcelItem>
-	{/each}
-</div>
+	<div slot="content">
+		{#if user_parcels.length > 0}
+			<div class="items" in:fade={{ duration: 350, delay: 650 }} out:fade={{ duration: 350 }}>
+				{#each user_parcels as parcel}
+					<ParcelItem {parcel}></ParcelItem>
+				{/each}
+			</div>
+		{:else}
+			<NoParcel />
+		{/if}
+	</div>
+</PageContentFade>

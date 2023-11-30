@@ -4,10 +4,18 @@ export const load = async ({ fetch, params }) => {
 
 	const resJSON = await response.json();
 
-	return {
-		parcel_info: resJSON.data.parcel_info,
-		authorized: resJSON.data.authorized,
-		title: resJSON.data.parcel_info.parcel_name,
+	let returnObj = {
 		description: 'Get detailed data aboout your parcels.'
 	};
+
+	if (!response.ok) {
+		returnObj.message = resJSON.message;
+		return returnObj;
+	}
+
+	returnObj.parcel_info = resJSON.data.parcel_info;
+	returnObj.authorized = resJSON.data.authorized;
+	returnObj.title = resJSON.data.parcel_name;
+
+	return returnObj;
 };
