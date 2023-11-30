@@ -11,7 +11,7 @@
 	let showPassword = false;
 	let isLoading = false;
 	let passwordValid = false;
-	const regex = /^[A-Za-z0-9$£€?!@#&%]+$/;
+	const regex = /^[A-Za-z0-9$£€?!@#&%-+<>]+$/;
 
 	$: user_email = user_email.trim();
 	$: password = password.trim();

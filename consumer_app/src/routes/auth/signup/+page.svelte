@@ -13,7 +13,7 @@
 	let showPassword = false;
 	let isLoading = false;
 	let passwordValid = false;
-	const regex = /^[A-Za-z0-9$£€?!@#&%]+$/;
+	const regex = /^[A-Za-z0-9$£€?!@#&%-+<>]+$/;
 	/**
 	 * @type {HTMLInputElement}
 	 */
@@ -52,7 +52,9 @@
 	$: password_confirm = password_confirm.trim();
 	$: amntNotifications = $notifications.length;
 
-	const checkConfirmFieldFocus = (e) => {
+	const checkConfirmFieldFocus = (
+		/** @type {Event & { currentTarget: EventTarget & HTMLInputElement; }} */ e
+	) => {
 		passConfirmFieldLast = e.target === textInputConfirm || e.target === passInputConfirm;
 	};
 

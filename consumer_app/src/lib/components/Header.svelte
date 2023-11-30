@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/stores';
-	import { SideBar } from '$components';
+	import { DeleteAccModal, Overlay, SideBar } from '$components';
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
@@ -8,7 +8,9 @@
 	 * @type {string}
 	 */
 	export let username;
+
 	let isMenuOpen = false;
+	let deleteAccModalOpen = false;
 
 	const openMenu = async () => {
 		await tick();
@@ -18,6 +20,16 @@
 	const closeMenu = async () => {
 		await tick();
 		isMenuOpen = false;
+	};
+
+	const closeAccDeleteModal = async () => {
+		await tick();
+		deleteAccModalOpen = false;
+	};
+
+	const openAccDeleteModal = async () => {
+		await tick();
+		deleteAccModalOpen = true;
 	};
 
 	const handleKeyDown = (/** @type {{ preventDefault: () => void; key: string; }} */ event) => {
@@ -57,7 +69,18 @@
 </header>
 
 {#if isMenuOpen && username !== null}
-	<SideBar {username} {isMenuOpen} on:closeMenu={closeMenu}></SideBar>
+	<SideBar
+		{username}
+		{isMenuOpen}
+		on:closeMenu={closeMenu}
+		on:openAccDeleteModal={openAccDeleteModal}
+	></SideBar>
+	<Overlay on:closeMenu={closeMenu} overlayLocation="menu"></Overlay>
+{/if}
+
+{#if deleteAccModalOpen}
+	<Overlay on:closeAccDeleteModal={closeAccDeleteModal} overlayLocation="accDeleteModal"></Overlay>
+	<DeleteAccModal on:closeAccDeleteModal={closeAccDeleteModal}></DeleteAccModal>
 {/if}
 
 <style lang="scss">

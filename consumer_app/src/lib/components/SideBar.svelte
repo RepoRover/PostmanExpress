@@ -4,7 +4,8 @@
 	import { notifications } from '$stores';
 	import { X } from 'lucide-svelte';
 	import { tick, createEventDispatcher } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
+	import { Overlay, DeleteAccModal } from '$components';
 
 	const dispatcher = createEventDispatcher();
 	/**
@@ -37,6 +38,11 @@
 		dispatcher('closeMenu');
 	};
 
+	const openDeleteAccModal = async () => {
+		await tick();
+		dispatcher('openAccDeleteModal');
+	};
+
 	afterNavigate(async () => {
 		await closeMenu();
 	});
@@ -52,9 +58,11 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="overlay" on:click={closeMenu} transition:fade={{ duration: 200 }}></div>
+<!-- <div class="overlay" on:click={closeMenu} transition:fade={{ duration: 350 }}></div> -->
 
-<nav in:fly={{ x: 196 }} out:fly={{ x: 196 }} class:opened={isMenuOpen}>
+<!-- <Overlay on:closeMenu={closeMenu} overlayLocation="menu"></Overlay> -->
+
+<nav transition:fly={{ x: 196, duration: 350 }} class:opened={isMenuOpen}>
 	<div class="inner-nav">
 		<div class="top">
 			<p class="username">{username}</p>
@@ -81,31 +89,26 @@
 						}
 					});
 					if (response.ok) {
+						closeMenu();
+						await invalidateAll();
 						notifications.success('Success', 'You successfully logged out');
-						invalidateAll();
 					}
 				}}
 			>
 				<button class="error">Log out</button>
 			</form>
-
-			<button class="error">Delete account</button>
+			<button
+				class="error"
+				on:click={async () => {
+					await closeMenu();
+					openDeleteAccModal();
+				}}>Delete account</button
+			>
 		</div>
 	</div>
 </nav>
 
 <style lang="scss">
-	.overlay {
-		position: fixed;
-		z-index: 200;
-		height: 100dvh;
-		width: 100dvw;
-		backdrop-filter: blur(0.3rem);
-		-webkit-backdrop-filter: blur(0.3rem);
-		overflow: hidden;
-		background-color: rgba($color: #000000, $alpha: 0.4);
-	}
-
 	nav {
 		position: fixed;
 		z-index: 300;

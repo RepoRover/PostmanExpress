@@ -38,7 +38,7 @@
 					notifications.info(
 						notification.title,
 						notification.parcel_name,
-						1000000,
+						10000,
 						notification.parcel_status,
 						notification.parcel_id
 					);
