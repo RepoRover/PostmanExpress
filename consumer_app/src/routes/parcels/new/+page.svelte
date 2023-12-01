@@ -372,9 +372,9 @@
 						<p>To:</p>
 					</div>
 					<div class="new-parcel-content">
-						<p>{parcel_name ? parcel_name : 'Parcel'}</p>
-						<p>{username}</p>
-						<p>{recipient_email}</p>
+						<p class="new-parcel-field">{parcel_name ? parcel_name : 'Parcel'}</p>
+						<p class="new-parcel-field">{username}</p>
+						<p class="new-parcel-field">{recipient_email}</p>
 						<p>{selectedShipFromLabel}</p>
 						<p>{selectedShipToLabel}</p>
 					</div>
@@ -451,9 +451,9 @@
 				>
 					<h2>Your parcel was successfully created!</h2>
 					<p>Delivery pin:</p>
-					<p class="pin">29384</p>
+					<p class="pin">{deliveryPin}</p>
 					<p class="message">You also get an email with this pin and further instructions</p>
-					<a href="/"> <span>Go home</span><ArrowRight size={12} /></a>
+					<a href="/"><span>Go home</span><ArrowRight size={12} /></a>
 				</div>
 			</div>
 		{/if}
@@ -471,8 +471,9 @@
 		grid-template-columns: repeat(2, 1fr);
 		padding: 3.2rem;
 		box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-		gap: 3.2rem;
+		gap: 3.6rem;
 	}
+
 	.new-parcel-left,
 	.new-parcel-right {
 		display: flex;
@@ -488,6 +489,13 @@
 		.new-parcel-content {
 			color: var(--accent-color);
 		}
+	}
+
+	.new-parcel-field {
+		white-space: nowrap;
+		overflow: hidden;
+		width: 20rem;
+		text-overflow: ellipsis;
 	}
 
 	.user-inputs.confimation-checkbox {
@@ -730,6 +738,45 @@
 			&:hover,
 			&:active {
 				color: var(--accent-color);
+			}
+		}
+	}
+
+	@media only screen and (max-width: 48em) {
+		.new-parcel-info {
+			grid-template-columns: 1fr;
+		}
+
+		.new-parcel-right {
+			gap: 5.5rem;
+		}
+	}
+
+	@media only screen and (max-width: 30em) {
+		.new-parcel-field {
+			width: 12rem;
+		}
+
+		.new-parcel-map {
+			padding: 0 1.2rem;
+			margin-bottom: 3.6rem;
+			.step {
+				.circle {
+					&::after {
+						font-size: 1rem;
+					}
+				}
+			}
+		}
+
+		.new-parcel-created {
+			h2 {
+				font-size: 2rem;
+			}
+			p {
+				&.pin {
+					font-size: 2rem;
+				}
 			}
 		}
 	}
