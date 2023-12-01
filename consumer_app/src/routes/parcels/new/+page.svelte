@@ -442,21 +442,20 @@
 				</form>
 			</div>
 		{:else if newParcelStep === 5}
+			<!-- Created -->
 			<div class="flex-box">
 				<div
 					class="new-parcel-created"
 					in:fade={{ delay: 350, duration: 350 }}
 					out:fade={{ duration: 350 }}
 				>
-					<h2>Your parcel was successfylly created!</h2>
+					<h2>Your parcel was successfully created!</h2>
 					<p>Delivery pin:</p>
-					<!-- <p>{deliveryPin}</p> -->
 					<p class="pin">29384</p>
 					<p class="message">You also get an email with this pin and further instructions</p>
 					<a href="/"> <span>Go home</span><ArrowRight size={12} /></a>
 				</div>
 			</div>
-			<!-- Created -->
 		{/if}
 	</div>
 </PageContentFade>
