@@ -7,10 +7,17 @@
 	$: styleVars = `--pseudo-width: ${width}; --pseudo-aspect-ratio: ${aspectRatio};`;
 </script>
 
-<!-- <div class="square-circle-3" transition:fade={{ duration: 300 }}></div> -->
-<div class="square-circle-3" transition:fade={{ duration: 200 }} style={styleVars}></div>
+<div class="loader">
+	<div class="square-circle-3" transition:fade={{ duration: 200 }} style={styleVars}></div>
+</div>
 
 <style lang="scss">
+	.loader {
+		position: fixed;
+		z-index: 201;
+		bottom: 4rem;
+		left: 4rem;
+	}
 	.square-circle-3 {
 		display: flex;
 		gap: 5px;

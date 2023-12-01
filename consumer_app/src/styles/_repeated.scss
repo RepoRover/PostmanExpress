@@ -269,6 +269,7 @@
 	gap: 2.4rem;
 
 	.input-box {
+		position: relative;
 		height: 4rem;
 		width: 100%;
 		align-self: center;
@@ -335,7 +336,7 @@
 	}
 }
 
-form {
+.submit-form {
 	width: 90%;
 	.submit-btn {
 		width: 100%;

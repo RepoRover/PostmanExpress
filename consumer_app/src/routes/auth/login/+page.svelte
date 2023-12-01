@@ -124,6 +124,7 @@
 			</div>
 		</div>
 		<form
+			class="submit-form"
 			method="POST"
 			use:enhance={() => {
 				isLoading = true;
@@ -131,7 +132,7 @@
 					if (result.type === 'failure') {
 						notifications.error(result.data.message);
 					} else if (result.type === 'redirect') {
-						notifications.success('Success', 'You successfully logged in', 100000);
+						notifications.success('Success', 'You successfully logged in');
 					}
 					await applyAction(result);
 					isLoading = false;

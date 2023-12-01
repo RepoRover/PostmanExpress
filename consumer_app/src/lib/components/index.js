@@ -13,3 +13,4 @@ export { default as Overlay } from './Overlay.svelte';
 export { default as DeleteAccModal } from './DeleteAccModal.svelte';
 export { default as PageContentFade } from './PageContentFade.svelte';
 export { default as NoParcel } from './NoParcel.svelte';
+export { default as LocationSelect } from './LocationSelect.svelte';

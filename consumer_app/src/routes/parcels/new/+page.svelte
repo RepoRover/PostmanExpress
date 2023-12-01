@@ -1,8 +1,8 @@
 <script>
 	import { applyAction, enhance } from '$app/forms';
-	import { PageContentFade } from '$components';
+	import { PageContentFade, Loader, LocationSelect } from '$components';
 	import { notifications } from '$stores';
-	import { Check } from 'lucide-svelte';
+	import { ArrowLeft, Check } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
 	let newParcelStep = 0;
@@ -11,26 +11,82 @@
 	let height;
 	let length;
 	let width;
-	let recipient_email;
+	let recipient_email = '';
 	let parcel_name;
+	let ship_from = '';
+	let ship_to = '';
 
 	let isLoading = false;
+
+	const checkEmailLength = () => {
+		if (
+			recipient_email.length === 0 &&
+			!$notifications.some((notification) => notification.message === 'Recipient email is required')
+		) {
+			notifications.warning('Recipient email is required');
+		}
+	};
+
+	const step2Check = () => {
+		if (
+			(ship_from.length === 0 || ship_to.length === 0) &&
+			!$notifications.some((notification) => notification.message === 'Invalid location')
+		) {
+			notifications.warning('Invalid location');
+			return;
+		} else if (
+			ship_from === ship_to &&
+			!$notifications.some(
+				(notification) => notification.message === "You can't send parcel to the same location."
+			)
+		) {
+			notifications.warning("You can't send parcel to the same location.");
+			return;
+		}
+
+		stepForward();
+	};
+
+	const selectShipFrom = (/** @type {{ detail: string; }} */ event) => {
+		ship_from = event.detail;
+	};
+
+	const selectShipTo = (/** @type {{ detail: string; }} */ event) => {
+		ship_to = event.detail;
+	};
 
 	const stepForward = () => {
 		newParcelStep++;
 	};
 
 	const stepBackward = () => {
-		newParcelStep++;
+		newParcelStep--;
+	};
+
+	$: step1BtnDisabled = recipient_email.length === 0 ? true : false;
+	$: step2BtnDisabled = ship_from.length === 0 || ship_to.length === 0 ? true : false;
+
+	const navigateToStep2 = () => {
+		if (!step1BtnDisabled) newParcelStep = 1;
+	};
+
+	const navigateToStep3 = () => {
+		if (!step2BtnDisabled) newParcelStep = 2;
 	};
 </script>
+
+{#if isLoading}
+	<Loader />
+{/if}
 
 <PageContentFade>
 	<h2 slot="title">New Parcel</h2>
 	<div slot="content">
 		<div class="new-parcel-map">
 			<div class="step" class:done={newParcelStep > 0} class:active={newParcelStep === 0}>
-				<div class="circle circle-1">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div class="circle circle-1" on:click={() => (newParcelStep = 0)}>
 					{#if newParcelStep > 0}
 						<Check color="#4e4e4e" size={16} />
 					{/if}
@@ -38,7 +94,9 @@
 				<div class="line"></div>
 			</div>
 			<div class="step" class:done={newParcelStep > 1} class:active={newParcelStep === 1}>
-				<div class="circle circle-2">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div class="circle circle-2" on:click={navigateToStep2}>
 					{#if newParcelStep > 1}
 						<Check color="#4e4e4e" size={16} />
 					{/if}
@@ -46,7 +104,9 @@
 				<div class="line"></div>
 			</div>
 			<div class="step" class:done={newParcelStep > 2} class:active={newParcelStep === 2}>
-				<div class="circle circle-3">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div class="circle circle-3" on:click={navigateToStep3}>
 					{#if newParcelStep > 2}
 						<Check color="#4e4e4e" size={16} />
 					{/if}
@@ -54,7 +114,9 @@
 				<div class="line"></div>
 			</div>
 			<div class="step" class:done={newParcelStep > 3} class:active={newParcelStep === 3}>
-				<div class="circle circle-4">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div class="circle circle-4" on:click={() => (newParcelStep = 3)}>
 					{#if newParcelStep > 3}
 						<Check color="#4e4e4e" size={16} />
 					{/if}
@@ -72,8 +134,9 @@
 
 		<div class="user-inputs">
 			{#if newParcelStep === 0}
+				<!-- Parcel name and recipient email step -->
 				<div
-					class="input-box"
+					class="input-box parcel-name"
 					in:fade={{ duration: 350, delay: 450 }}
 					out:fade={{ duration: 350, delay: 25 }}
 				>
@@ -102,12 +165,14 @@
 								type="text"
 								placeholder="Recipient email"
 								bind:value={recipient_email}
+								on:input={checkEmailLength}
 							/>
 						</div>
 					</div>
 				</div>
 				<form
-					action="?/validateUser"
+					class="submit-form"
+					action="?/validateEmail"
 					method="post"
 					use:enhance={() => {
 						isLoading = true;
@@ -128,18 +193,32 @@
 						style:display="none"
 						bind:value={recipient_email}
 					/>
-					<input type="text" name="parcel_name" style:display="none" bind:value={parcel_name} />
 					<button
 						type="submit"
 						class="submit-btn"
 						in:fade={{ duration: 350, delay: 475 }}
-						out:fade={{ duration: 350, delay: 50 }}>Continue</button
+						out:fade={{ duration: 350, delay: 50 }}
+						disabled={step1BtnDisabled}>Continue</button
 					>
 				</form>
-				<!-- Parcel name and recipient email step -->
 			{:else if newParcelStep === 1}
+				<div class="location-1">
+					<LocationSelect on:selectLocation={selectShipFrom} />
+				</div>
+				<LocationSelect on:selectLocation={selectShipTo} />
 				<!-- Locations step -->
-				<div></div>
+				<form
+					class="move-btns submit-form"
+					in:fade={{ delay: 450, duration: 350 }}
+					out:fade={{ duration: 350, delay: 50 }}
+				>
+					<button type="button" class="btn-back" on:click={stepBackward}
+						><ArrowLeft></ArrowLeft></button
+					>
+					<button type="button" class="submit-btn" on:click={step2Check} disabled={step2BtnDisabled}
+						>Continue</button
+					>
+				</form>
 			{:else if newParcelStep === 2}
 				<input type="number" name="weight" bind:value={weight} placeholder="Weight" />
 				<input type="number" name="height" bind:value={height} placeholder="Height" />
@@ -155,6 +234,20 @@
 </PageContentFade>
 
 <style lang="scss">
+	.parcel-name {
+		&::after {
+			content: 'Optional';
+			position: absolute;
+			top: 50%;
+			right: -4.8rem;
+			transform: translateY(-50%);
+		}
+	}
+
+	.location-1 {
+		width: 100%;
+		z-index: 50;
+	}
 	.new-parcel-map {
 		height: 2rem;
 		display: flex;
@@ -170,6 +263,10 @@
 
 			&.last {
 				width: auto;
+
+				.circle {
+					cursor: default;
+				}
 			}
 			.circle {
 				position: relative;
@@ -177,10 +274,11 @@
 				width: 2rem;
 				border-radius: 100%;
 				border: 2px solid var(--dis-action-btn);
-				transition: all 0.3s;
+				transition: all 0.35s;
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				cursor: pointer;
 
 				&::after {
 					white-space: nowrap;
@@ -225,10 +323,15 @@
 				height: 1px;
 				background-color: var(--section-sep);
 				border-radius: 5px;
+				transition: all 0.35s;
 			}
 
 			&.done {
 				.circle {
+					background-color: var(--delivered);
+				}
+
+				.line {
 					background-color: var(--delivered);
 				}
 			}

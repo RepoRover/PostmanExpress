@@ -4,7 +4,7 @@
 	import { tick } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 	import { notifications } from '$stores';
-	import { Loader } from '$components';
+	import { Loader, LocationSelect } from '$components';
 
 	let password = '';
 	let user_email = '';
@@ -150,6 +150,10 @@
 		};
 	};
 
+	const selectLocation = (/** @type {{ detail: string; }} */ event) => {
+		location = event.detail;
+	};
+
 	const stepForward = () => {
 		signUpStep++;
 	};
@@ -245,6 +249,7 @@
 				</div>
 			</div>
 			<form
+				class="submit-form"
 				action="?/validateUser"
 				method="post"
 				use:enhance={() => {
@@ -377,7 +382,7 @@
 				</div>
 			</div>
 			<form
-				class="move-btns"
+				class="move-btns submit-form"
 				in:fade={{ delay: 450, duration: 350 }}
 				out:fade={{ duration: 350, delay: 50 }}
 			>
@@ -396,48 +401,9 @@
 				<p>Already have an account? <a href="/auth/login">Log in</a></p>
 			</div>
 		{:else if signUpStep === 2}
-			<div
-				class="input-box"
-				use:clickOutside
-				in:fade={{ delay: 425, duration: 350 }}
-				out:fade={{ duration: 350 }}
-			>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="inner-box select-box">
-					<div class="select-action" on:click={() => (selectIsOpen = !selectIsOpen)}></div>
-					<div class="absolute">
-						<div class="select">
-							<div
-								class="selected-value"
-								class:selected={selectedLocationLabel !== 'Select your location'}
-							>
-								{selectedLocationLabel}
-							</div>
-							{#if selectIsOpen}
-								<div class="options-container" transition:fade={{ duration: 200 }}>
-									{#each locationOptions as locationItem (locationItem.value)}
-										<div
-											class="option"
-											class:active={location === locationItem.value}
-											on:click={() => selectOption(locationItem)}
-										>
-											<p>
-												{locationItem.label}
-											</p>
-										</div>
-									{/each}
-								</div>
-							{/if}
-						</div>
-						<button class="icon" class:opened={selectIsOpen} type="button">
-							<ChevronDown size={19}></ChevronDown>
-						</button>
-					</div>
-				</div>
-			</div>
+			<LocationSelect on:selectLocation={selectLocation} />
 			<form
-				class="move-btns"
+				class="move-btns submit-form"
 				method="post"
 				action="?/signup"
 				use:enhance={() => {

@@ -82,7 +82,6 @@
 
 <Notifications />
 
-<!-- {#if user} -->
 {#if $page.url.pathname !== '/auth/login' && $page.url.pathname !== '/auth/signup'}
 	<div
 		class="header"
@@ -92,10 +91,9 @@
 	></div>
 	<Header username={user ? user.username : null}></Header>
 	{#if isLoading}
-		<div class="loader"><Loader></Loader></div>
+		<Loader></Loader>
 	{/if}
 {/if}
-<!-- {/if} -->
 <main>
 	<div class="page-content">
 		<slot />
@@ -115,12 +113,6 @@
 		opacity: 0;
 	}
 
-	.loader {
-		position: fixed;
-		z-index: 10;
-		bottom: 4rem;
-		left: 4rem;
-	}
 	main {
 		margin: 0 auto;
 		max-width: 144rem;
