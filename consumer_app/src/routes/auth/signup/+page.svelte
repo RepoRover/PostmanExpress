@@ -50,7 +50,6 @@
 	$: user_email = user_email.trim();
 	$: password = password.trim();
 	$: password_confirm = password_confirm.trim();
-	$: amntNotifications = $notifications.length;
 
 	const checkConfirmFieldFocus = (
 		/** @type {Event & { currentTarget: EventTarget & HTMLInputElement; }} */ e
@@ -116,7 +115,10 @@
 	};
 
 	const checkEmailLength = () => {
-		if (user_email.length === 0 && amntNotifications <= 2) {
+		if (
+			user_email.length === 0 &&
+			!$notifications.some((notification) => notification.message === 'Email is required')
+		) {
 			notifications.warning('Email is required');
 		}
 	};
@@ -269,7 +271,7 @@
 				>
 			</form>
 			<div
-				class="message"
+				class="message-auth"
 				in:fade={{ delay: 500, duration: 350 }}
 				out:fade={{ duration: 350, delay: 75 }}
 			>
@@ -387,7 +389,7 @@
 				>
 			</form>
 			<div
-				class="message"
+				class="message-auth"
 				in:fade={{ delay: 475, duration: 350 }}
 				out:fade={{ duration: 350, delay: 75 }}
 			>
@@ -408,7 +410,7 @@
 						<div class="select">
 							<div
 								class="selected-value"
-								class:selected={selectedLocationLabel !== 'Select an option'}
+								class:selected={selectedLocationLabel !== 'Select your location'}
 							>
 								{selectedLocationLabel}
 							</div>
@@ -464,7 +466,7 @@
 				<button type="submit" class="submit-btn" disabled={submitDisabled}>Apply</button>
 			</form>
 			<div
-				class="message"
+				class="message-auth"
 				in:fade={{ delay: 475, duration: 350 }}
 				out:fade={{ duration: 350, delay: 50 }}
 			>
@@ -473,234 +475,3 @@
 		{/if}
 	</div>
 </div>
-
-<style lang="scss">
-	.subtitle {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		color: var(--accent-color);
-
-		.loader {
-			height: 2rem;
-			width: 4.5rem;
-		}
-
-		p {
-			margin-top: 1.2rem;
-			font-size: 1.8rem;
-		}
-	}
-
-	.user-inputs {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin: 2rem auto 3.6rem auto;
-		width: 27rem;
-		gap: 2.4rem;
-
-		.input-box {
-			height: 4rem;
-			width: 100%;
-			align-self: center;
-			background-color: var(--s-bg-color);
-			border: 2px solid var(--border);
-			border-radius: 8px;
-			box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-
-			.inner-box {
-				width: 100%;
-				height: 100%;
-				position: relative;
-				display: flex;
-
-				&.select-box {
-					cursor: pointer;
-				}
-
-				&.overflow-hidden {
-					overflow: hidden;
-				}
-
-				.absolute {
-					z-index: 20;
-					left: 1.8rem;
-					top: 50%;
-					position: absolute;
-					transform: translateY(-50%);
-					width: calc(100% - 1.8rem - 4px - 0.7rem);
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-				}
-
-				input {
-					background-color: transparent;
-					border: none;
-					font-family: inherit;
-					outline: none;
-					font-size: 1.8rem;
-					color: var(--accent-color);
-					width: 100%;
-
-					&::placeholder {
-						color: var(--text-color);
-					}
-				}
-
-				.icon {
-					display: flex;
-					cursor: pointer;
-					background-color: transparent;
-					border: none;
-					color: var(--accent-color);
-					border-radius: 12px;
-					outline-offset: 0;
-					transition: all 0.3s;
-
-					&.opened {
-						transform: rotate(180deg);
-					}
-				}
-			}
-
-			.select-action {
-				width: 100%;
-				height: 100%;
-				z-index: 21;
-			}
-
-			.select {
-				font-size: 1.8rem;
-				position: relative;
-				width: 100%;
-
-				.selected-value.selected {
-					color: var(--accent-color);
-				}
-
-				.options-container {
-					position: absolute;
-					margin-top: 0.8rem;
-					right: -4rem;
-					width: 128%;
-					background-color: var(--s-bg-color);
-					border-radius: 8px;
-				}
-
-				.option {
-					padding: 0.4rem 0 0.4rem 1.8rem;
-					cursor: pointer;
-					transition: all 0.3s;
-					p {
-						transition: all 0.3s;
-					}
-
-					&:hover {
-						color: var(--accent-color);
-						background-color: var(--t-bg-color);
-
-						p {
-							transform: translateX(0.5rem);
-						}
-					}
-
-					&.active {
-						color: var(--accent-color);
-						background-color: var(--t-bg-color);
-
-						p {
-							transform: translateX(0.5rem);
-						}
-					}
-
-					&:first-child {
-						padding-top: 0.8rem;
-						border-radius: 8px 8px 0 0;
-					}
-					&:last-child {
-						padding-bottom: 0.8rem;
-						border-radius: 0 0 8px 8px;
-					}
-				}
-			}
-		}
-
-		form {
-			width: 90%;
-
-			&.move-btns {
-				width: 90%;
-				display: grid;
-				grid-template-columns: 20fr 80fr;
-				column-gap: 2rem;
-
-				.submit-btn {
-					width: 100%;
-				}
-
-				.btn-back {
-					background-color: var(--t-bg-color);
-					border: none;
-					border-radius: 8px;
-					transition: all 0.3s;
-					cursor: pointer;
-					box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-					color: var(--text-color);
-
-					&:hover {
-						background-color: var(--s-bg-color);
-						transform: scale(1.08);
-						color: var(--accent-color);
-					}
-				}
-			}
-		}
-
-		.submit-btn {
-			font-weight: 300;
-			font-family: inherit;
-			z-index: 10;
-			background-color: var(--action-btn);
-			border: none;
-			width: 100%;
-			padding: 1rem;
-			border-radius: 8px;
-			font-size: 1.8rem;
-			color: var(--accent-color);
-			font-family: inherit;
-			transition: all 0.3s;
-			cursor: pointer;
-			outline-color: var(--s-action-btn);
-			box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-
-			&:hover {
-				background-color: var(--s-action-btn);
-				transform: scale(1.05);
-			}
-
-			&:disabled {
-				cursor: not-allowed;
-				transform: none;
-				background-color: var(--dis-action-btn);
-			}
-		}
-	}
-
-	.message {
-		display: flex;
-		justify-content: center;
-		font-size: 1.8rem;
-		color: var(--text-color);
-		padding-bottom: 6.4rem;
-
-		a {
-			&:link,
-			&:visited {
-				color: var(--accent-color);
-				text-decoration: none;
-			}
-		}
-	}
-</style>

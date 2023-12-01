@@ -108,7 +108,7 @@
 <style lang="scss">
 	.header {
 		height: 7.2rem;
-		z-index: 5;
+		z-index: 21;
 		position: fixed;
 		width: 100%;
 		background-color: var(--s-bg-color);

@@ -131,7 +131,7 @@
 					if (result.type === 'failure') {
 						notifications.error(result.data.message);
 					} else if (result.type === 'redirect') {
-						notifications.success('Success', 'You successfully logged in');
+						notifications.success('Success', 'You successfully logged in', 100000);
 					}
 					await applyAction(result);
 					isLoading = false;
@@ -142,147 +142,8 @@
 			<input type="text" name="user_email" bind:value={user_email} style:display="none" />
 			<button type="submit" class="submit-btn" disabled={submitDisabled}>Apply</button>
 		</form>
-		<div class="message">
+		<div class="message-auth">
 			<p>Don't have an account yet? <a href="/auth/signup">Sign up</a></p>
 		</div>
 	</div>
 </div>
-
-<style lang="scss">
-	.subtitle {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		color: var(--accent-color);
-
-		.loader {
-			height: 2rem;
-			width: 4.5rem;
-		}
-
-		p {
-			margin-top: 1.2rem;
-			font-size: 1.8rem;
-		}
-	}
-
-	.user-inputs {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin: 2rem auto 3.6rem auto;
-		width: 27rem;
-		gap: 2.4rem;
-
-		.input-box {
-			height: 4rem;
-			width: 100%;
-			align-self: center;
-			background-color: var(--s-bg-color);
-			border: 2px solid var(--border);
-			border-radius: 8px;
-			box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-
-			.inner-box {
-				width: 100%;
-				height: 100%;
-				position: relative;
-				display: flex;
-
-				&.overflow-hidden {
-					overflow: hidden;
-				}
-
-				.absolute {
-					z-index: 20;
-					left: 1.8rem;
-					top: 50%;
-					position: absolute;
-					transform: translateY(-50%);
-					width: calc(100% - 1.8rem - 4px - 0.7rem);
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-				}
-
-				input {
-					background-color: transparent;
-					border: none;
-					font-family: inherit;
-					outline: none;
-					font-size: 1.8rem;
-					color: var(--accent-color);
-					width: 100%;
-
-					&::placeholder {
-						color: var(--text-color);
-					}
-				}
-
-				.icon {
-					display: flex;
-					cursor: pointer;
-					background-color: transparent;
-					border: none;
-					color: var(--accent-color);
-					border-radius: 12px;
-					outline-offset: 0;
-					transition: all 0.3s;
-				}
-			}
-		}
-
-		form {
-			width: 90%;
-
-			.submit-btn {
-				width: 100%;
-			}
-		}
-
-		.submit-btn {
-			font-weight: 300;
-			font-family: inherit;
-			z-index: 10;
-			background-color: var(--action-btn);
-			border: none;
-			width: 100%;
-			padding: 1rem;
-			border-radius: 8px;
-			font-size: 1.8rem;
-			color: var(--accent-color);
-			font-family: inherit;
-			transition: all 0.3s;
-			cursor: pointer;
-			outline-color: var(--s-action-btn);
-			box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
-
-			&:hover {
-				background-color: var(--s-action-btn);
-				transform: scale(1.05);
-			}
-
-			&:disabled {
-				cursor: not-allowed;
-				transform: none;
-				background-color: var(--dis-action-btn);
-			}
-		}
-	}
-
-	.message {
-		display: flex;
-		justify-content: center;
-		font-size: 1.8rem;
-		color: var(--text-color);
-		padding-bottom: 6.4rem;
-
-		a {
-			&:link,
-			&:visited {
-				color: var(--accent-color);
-				text-decoration: none;
-			}
-		}
-	}
-</style>
