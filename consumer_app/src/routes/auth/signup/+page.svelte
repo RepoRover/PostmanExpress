@@ -31,19 +31,11 @@
 	 */
 	let passInputConfirm;
 	let passConfirmFieldLast = false;
-	let selectIsOpen = false;
 	/**
 	 * @type {string | null}
 	 */
 	let location = null;
 	let selectedLocationLabel = 'Select your location';
-	let locationOptions = [
-		{ value: 'helsinki', label: 'Helsinki' },
-		{ value: 'oulu', label: 'Oulu' },
-		{ value: 'espoo', label: 'Espoo' },
-		{ value: 'turku', label: 'Turku' },
-		{ value: 'tampere', label: 'Tampere' }
-	];
 	let confirmValid = false;
 	let signUpStep = 0;
 
@@ -123,35 +115,9 @@
 		}
 	};
 
-	const selectOption = (/** @type {{ value: string; label: string; }} */ option) => {
-		location = option.value;
-		selectedLocationLabel = option.label;
-		selectIsOpen = false;
-	};
-
-	/**
-	 * @param {HTMLDivElement} node
-	 */
-	const clickOutside = (node) => {
-		const handleClick = (/** @type {{ target: Node; defaultPrevented: any; }} */ event) => {
-			if (node && !node.contains(event.target) && !event.defaultPrevented) {
-				selectIsOpen = false;
-			}
-		};
-
-		// @ts-ignore
-		window.addEventListener('click', handleClick);
-
-		return {
-			destroy() {
-				// @ts-ignore
-				window.removeEventListener('click', handleClick);
-			}
-		};
-	};
-
-	const selectLocation = (/** @type {{ detail: string; }} */ event) => {
-		location = event.detail;
+	const selectLocation = (/** @type {{ detail: object; }} */ event) => {
+		location = event.detail.value;
+		selectedLocationLabel = event.detail.label;
 	};
 
 	const stepForward = () => {
@@ -190,7 +156,7 @@
 			: false;
 </script>
 
-<div class="signup" in:fade={{ delay: 375, duration: 350 }} out:fade={{ duration: 350 }}>
+<div class="signup" in:fade={{ delay: 350, duration: 350 }} out:fade={{ duration: 350 }}>
 	<div class="subtitle">
 		<!-- <h1>PostmanExpress</h1> -->
 		<div class="loader">
@@ -203,7 +169,7 @@
 
 	<div class="user-inputs">
 		{#if signUpStep === 0}
-			<div class="input-box" in:fade={{ duration: 350, delay: 425 }} out:fade={{ duration: 350 }}>
+			<div class="input-box" in:fade={{ duration: 350, delay: 350 }} out:fade={{ duration: 350 }}>
 				<div class="inner-box">
 					<div class="absolute">
 						<input
@@ -227,11 +193,7 @@
 					</div>
 				</div>
 			</div>
-			<div
-				class="input-box"
-				in:fade={{ duration: 350, delay: 450 }}
-				out:fade={{ duration: 350, delay: 25 }}
-			>
+			<div class="input-box" in:fade={{ duration: 350, delay: 350 }} out:fade={{ duration: 350 }}>
 				<div class="inner-box">
 					<div class="absolute">
 						<input
@@ -271,19 +233,19 @@
 					type="submit"
 					class="submit-btn"
 					disabled={step1BtnDisabled}
-					in:fade={{ duration: 350, delay: 475 }}
-					out:fade={{ duration: 350, delay: 50 }}>Continue</button
+					in:fade={{ duration: 350, delay: 350 }}
+					out:fade={{ duration: 350 }}>Continue</button
 				>
 			</form>
 			<div
 				class="message-auth"
-				in:fade={{ delay: 500, duration: 350 }}
-				out:fade={{ duration: 350, delay: 75 }}
+				in:fade={{ delay: 350, duration: 350 }}
+				out:fade={{ duration: 350 }}
 			>
 				<p>Already have an account? <a href="/auth/login">Log in</a></p>
 			</div>
 		{:else if signUpStep === 1}
-			<div class="input-box" in:fade={{ duration: 350, delay: 400 }} out:fade={{ duration: 350 }}>
+			<div class="input-box" in:fade={{ duration: 350, delay: 350 }} out:fade={{ duration: 350 }}>
 				<div class="inner-box overflow-hidden">
 					{#if showPassword}
 						<div
@@ -330,11 +292,7 @@
 					{/if}
 				</div>
 			</div>
-			<div
-				class="input-box"
-				in:fade={{ delay: 425, duration: 350 }}
-				out:fade={{ duration: 350, delay: 25 }}
-			>
+			<div class="input-box" in:fade={{ delay: 350, duration: 350 }} out:fade={{ duration: 350 }}>
 				<div class="inner-box overflow-hidden">
 					{#if showPassword}
 						<div
@@ -383,8 +341,8 @@
 			</div>
 			<form
 				class="move-btns submit-form"
-				in:fade={{ delay: 450, duration: 350 }}
-				out:fade={{ duration: 350, delay: 50 }}
+				in:fade={{ delay: 350, duration: 350 }}
+				out:fade={{ duration: 350 }}
 			>
 				<button type="button" class="btn-back" on:click={stepBackward}
 					><ArrowLeft></ArrowLeft></button
@@ -395,13 +353,13 @@
 			</form>
 			<div
 				class="message-auth"
-				in:fade={{ delay: 475, duration: 350 }}
-				out:fade={{ duration: 350, delay: 75 }}
+				in:fade={{ delay: 350, duration: 350 }}
+				out:fade={{ duration: 350 }}
 			>
 				<p>Already have an account? <a href="/auth/login">Log in</a></p>
 			</div>
 		{:else if signUpStep === 2}
-			<LocationSelect on:selectLocation={selectLocation} />
+			<LocationSelect on:selectLocation={selectLocation} {selectedLocationLabel} />
 			<form
 				class="move-btns submit-form"
 				method="post"
@@ -419,8 +377,8 @@
 						isLoading = false;
 					};
 				}}
-				in:fade={{ delay: 450, duration: 350 }}
-				out:fade={{ duration: 350, delay: 25 }}
+				in:fade={{ delay: 350, duration: 350 }}
+				out:fade={{ duration: 350 }}
 			>
 				<input type="text" name="location" bind:value={location} style:display="none" />
 				<input type="text" name="username" bind:value={username} style:display="none" />
@@ -433,8 +391,8 @@
 			</form>
 			<div
 				class="message-auth"
-				in:fade={{ delay: 475, duration: 350 }}
-				out:fade={{ duration: 350, delay: 50 }}
+				in:fade={{ delay: 350, duration: 350 }}
+				out:fade={{ duration: 350 }}
 			>
 				<p>Already have an account? <a href="/auth/login">Log in</a></p>
 			</div>

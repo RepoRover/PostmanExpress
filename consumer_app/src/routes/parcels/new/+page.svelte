@@ -1,9 +1,14 @@
 <script>
+	// @ts-nocheck
+
 	import { applyAction, enhance } from '$app/forms';
+	import { page } from '$app/stores';
 	import { PageContentFade, Loader, LocationSelect } from '$components';
 	import { notifications } from '$stores';
-	import { ArrowLeft, Check } from 'lucide-svelte';
+	import { ArrowLeft, ArrowRight, Check } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
+
+	$: username = $page.data.user.username;
 
 	let newParcelStep = 0;
 
@@ -12,11 +17,20 @@
 	let length;
 	let width;
 	let recipient_email = '';
-	let parcel_name;
+	let parcel_name = '';
 	let ship_from = '';
 	let ship_to = '';
 
 	let isLoading = false;
+	let selectedShipToLabel = 'Select ship to';
+	let selectedShipFromLabel = 'Select ship from';
+	let confirmed = false;
+	let deliveryPin;
+
+	const hasOneDecimal = (number) => {
+		const parts = number.toString().split('.');
+		return !parts[1] || parts[1].length === 1;
+	};
 
 	const checkEmailLength = () => {
 		if (
@@ -37,22 +51,46 @@
 		} else if (
 			ship_from === ship_to &&
 			!$notifications.some(
-				(notification) => notification.message === "You can't send parcel to the same location."
+				(notification) => notification.message === "You can't send parcel to the same location"
 			)
 		) {
-			notifications.warning("You can't send parcel to the same location.");
+			notifications.warning("You can't send parcel to the same location");
 			return;
 		}
 
 		stepForward();
 	};
 
-	const selectShipFrom = (/** @type {{ detail: string; }} */ event) => {
-		ship_from = event.detail;
+	const step3Check = () => {
+		if (
+			(!weight || !height || !length || !width) &&
+			!$notifications.some((notification) => notification.message === 'Some dimentions are missing')
+		) {
+			notifications.warning('Some dimentions are missing');
+			return;
+		}
+
+		if (
+			(!hasOneDecimal(weight) ||
+				!hasOneDecimal(height) ||
+				!hasOneDecimal(length) ||
+				!hasOneDecimal(width)) &&
+			!$notifications.some((notification) => notification.message === 'One decimal point maximum')
+		) {
+			notifications.warning('One decimal point maximum');
+			return;
+		}
+		stepForward();
 	};
 
-	const selectShipTo = (/** @type {{ detail: string; }} */ event) => {
-		ship_to = event.detail;
+	const selectShipFrom = (/** @type {{ detail: object; }} */ event) => {
+		ship_from = event.detail.value;
+		selectedShipFromLabel = event.detail.label;
+	};
+
+	const selectShipTo = (/** @type {{ detail: object; }} */ event) => {
+		ship_to = event.detail.value;
+		selectedShipToLabel = event.detail.label;
 	};
 
 	const stepForward = () => {
@@ -65,13 +103,23 @@
 
 	$: step1BtnDisabled = recipient_email.length === 0 ? true : false;
 	$: step2BtnDisabled = ship_from.length === 0 || ship_to.length === 0 ? true : false;
+	$: step3BtnDisabled = !weight || !height || !length || !width ? true : false;
+	$: step4BtnDisabled = !confirmed;
+
+	const navigateToStep1 = () => {
+		if (newParcelStep !== 5) newParcelStep = 0;
+	};
 
 	const navigateToStep2 = () => {
-		if (!step1BtnDisabled) newParcelStep = 1;
+		if (!step1BtnDisabled && newParcelStep !== 5) newParcelStep = 1;
 	};
 
 	const navigateToStep3 = () => {
-		if (!step2BtnDisabled) newParcelStep = 2;
+		if (!step2BtnDisabled && newParcelStep !== 5) newParcelStep = 2;
+	};
+
+	const navigateToStep4 = () => {
+		if (!step3BtnDisabled && newParcelStep !== 5) newParcelStep = 3;
 	};
 </script>
 
@@ -86,7 +134,7 @@
 			<div class="step" class:done={newParcelStep > 0} class:active={newParcelStep === 0}>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="circle circle-1" on:click={() => (newParcelStep = 0)}>
+				<div class="circle circle-1" on:click={navigateToStep1}>
 					{#if newParcelStep > 0}
 						<Check color="#4e4e4e" size={16} />
 					{/if}
@@ -116,7 +164,7 @@
 			<div class="step" class:done={newParcelStep > 3} class:active={newParcelStep === 3}>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="circle circle-4" on:click={() => (newParcelStep = 3)}>
+				<div class="circle circle-4" on:click={navigateToStep4}>
 					{#if newParcelStep > 3}
 						<Check color="#4e4e4e" size={16} />
 					{/if}
@@ -132,13 +180,13 @@
 			</div>
 		</div>
 
-		<div class="user-inputs">
-			{#if newParcelStep === 0}
+		{#if newParcelStep === 0}
+			<div class="user-inputs">
 				<!-- Parcel name and recipient email step -->
 				<div
-					class="input-box parcel-name"
-					in:fade={{ duration: 350, delay: 450 }}
-					out:fade={{ duration: 350, delay: 25 }}
+					class="input-box parcel-name-input"
+					in:fade={{ duration: 350, delay: 350 }}
+					out:fade={{ duration: 350 }}
 				>
 					<div class="inner-box">
 						<div class="absolute">
@@ -152,11 +200,7 @@
 						</div>
 					</div>
 				</div>
-				<div
-					class="input-box"
-					in:fade={{ duration: 350, delay: 450 }}
-					out:fade={{ duration: 350, delay: 25 }}
-				>
+				<div class="input-box" in:fade={{ duration: 350, delay: 350 }} out:fade={{ duration: 350 }}>
 					<div class="inner-box">
 						<div class="absolute">
 							<input
@@ -196,21 +240,30 @@
 					<button
 						type="submit"
 						class="submit-btn"
-						in:fade={{ duration: 350, delay: 475 }}
-						out:fade={{ duration: 350, delay: 50 }}
+						in:fade={{ duration: 350, delay: 350 }}
+						out:fade={{ duration: 350 }}
 						disabled={step1BtnDisabled}>Continue</button
 					>
 				</form>
-			{:else if newParcelStep === 1}
+			</div>
+		{:else if newParcelStep === 1}
+			<!-- Locations step -->
+			<div class="user-inputs">
 				<div class="location-1">
-					<LocationSelect on:selectLocation={selectShipFrom} />
+					<LocationSelect
+						on:selectLocation={selectShipFrom}
+						selectedLocationLabel={selectedShipFromLabel}
+					/>
 				</div>
-				<LocationSelect on:selectLocation={selectShipTo} />
-				<!-- Locations step -->
+				<LocationSelect
+					on:selectLocation={selectShipTo}
+					selectedLocationLabel={selectedShipToLabel}
+				/>
+
 				<form
 					class="move-btns submit-form"
-					in:fade={{ delay: 450, duration: 350 }}
-					out:fade={{ duration: 350, delay: 50 }}
+					in:fade={{ delay: 350, duration: 350 }}
+					out:fade={{ duration: 350 }}
 				>
 					<button type="button" class="btn-back" on:click={stepBackward}
 						><ArrowLeft></ArrowLeft></button
@@ -219,27 +272,314 @@
 						>Continue</button
 					>
 				</form>
-			{:else if newParcelStep === 2}
-				<input type="number" name="weight" bind:value={weight} placeholder="Weight" />
-				<input type="number" name="height" bind:value={height} placeholder="Height" />
-				<input type="number" name="length" bind:value={length} placeholder="Length" />
-				<input type="number" name="width" bind:value={width} placeholder="Width" />
-			{:else if newParcelStep === 3}
-				<!-- Confirmation -->
-			{:else if newParcelStep === 4}
-				<!-- Created -->
-			{/if}
-		</div>
+			</div>
+		{:else if newParcelStep === 2}
+			<div class="user-inputs">
+				<div
+					class="input-box kg"
+					in:fade={{ duration: 350, delay: 350 }}
+					out:fade={{ duration: 350 }}
+				>
+					<div class="inner-box">
+						<div class="absolute">
+							<input
+								class="text-input"
+								type="number"
+								name="weight"
+								bind:value={weight}
+								placeholder="Weight"
+							/>
+						</div>
+					</div>
+				</div>
+				<div
+					class="input-box m"
+					in:fade={{ duration: 350, delay: 350 }}
+					out:fade={{ duration: 350 }}
+				>
+					<div class="inner-box">
+						<div class="absolute">
+							<input
+								class="text-input"
+								type="number"
+								name="height"
+								bind:value={height}
+								placeholder="Height"
+							/>
+						</div>
+					</div>
+				</div>
+				<div
+					class="input-box m"
+					in:fade={{ duration: 350, delay: 350 }}
+					out:fade={{ duration: 350 }}
+				>
+					<div class="inner-box">
+						<div class="absolute">
+							<input
+								class="text-input"
+								type="number"
+								name="length"
+								bind:value={length}
+								placeholder="Length"
+							/>
+						</div>
+					</div>
+				</div>
+				<div
+					class="input-box m"
+					in:fade={{ duration: 350, delay: 350 }}
+					out:fade={{ duration: 350 }}
+				>
+					<div class="inner-box">
+						<div class="absolute">
+							<input
+								class="text-input"
+								type="number"
+								name="width"
+								bind:value={width}
+								placeholder="Width"
+							/>
+						</div>
+					</div>
+				</div>
+				<form
+					class="move-btns submit-form"
+					in:fade={{ delay: 350, duration: 350 }}
+					out:fade={{ duration: 350 }}
+				>
+					<button type="button" class="btn-back" on:click={stepBackward}
+						><ArrowLeft></ArrowLeft></button
+					>
+					<button type="button" class="submit-btn" disabled={step3BtnDisabled} on:click={step3Check}
+						>Continue</button
+					>
+				</form>
+			</div>
+		{:else if newParcelStep === 3}
+			<!-- Confirmation -->
+			<div
+				class="new-parcel-info"
+				in:fade={{ duration: 350, delay: 350 }}
+				out:fade={{ duration: 350 }}
+			>
+				<div class="new-parcel-left">
+					<div class="labels">
+						<p>Name:</p>
+						<p>Sender:</p>
+						<p>Recipient:</p>
+						<p>From:</p>
+						<p>To:</p>
+					</div>
+					<div class="new-parcel-content">
+						<p>{parcel_name ? parcel_name : 'Parcel'}</p>
+						<p>{username}</p>
+						<p>{recipient_email}</p>
+						<p>{selectedShipFromLabel}</p>
+						<p>{selectedShipToLabel}</p>
+					</div>
+				</div>
+				<div class="new-parcel-right">
+					<div class="labels">
+						<div>Weight:</div>
+						<div>Height:</div>
+						<div>Length:</div>
+						<div>Width:</div>
+					</div>
+					<div class="new-parcel-content">
+						<p>{weight} kg</p>
+						<p>{height} m</p>
+						<p>{length} m</p>
+						<p>{width} m</p>
+					</div>
+				</div>
+			</div>
+			<div class="user-inputs confimation-checkbox">
+				<label class="confirmation-box"
+					>Confirm that all parcel details are accurate
+					<input type="checkbox" bind:checked={confirmed} />
+					<span class="checkmark"></span>
+				</label>
+			</div>
+			<div class="user-inputs">
+				<form
+					class="move-btns submit-form"
+					action="?/postNewParcel"
+					method="post"
+					use:enhance={() => {
+						isLoading = true;
+						return async ({ result }) => {
+							if (result.type === 'failure') {
+								notifications.warning(result.data.message);
+							} else {
+								deliveryPin = result.data.data.delivery_pin;
+								newParcelStep = 5;
+							}
+							await applyAction(result);
+							isLoading = false;
+						};
+					}}
+					in:fade={{ delay: 350, duration: 350 }}
+					out:fade={{ duration: 350 }}
+				>
+					<input type="text" name="ship_from" bind:value={ship_from} style:display="none" />
+					<input type="text" name="ship_to" bind:value={ship_to} style:display="none" />
+					<input type="text" name="parcel_name" bind:value={parcel_name} style:display="none" />
+					<input type="text" name="weight" bind:value={weight} style:display="none" />
+					<input type="text" name="height" bind:value={height} style:display="none" />
+					<input type="text" name="length" bind:value={length} style:display="none" />
+					<input type="text" name="width" bind:value={width} style:display="none" />
+					<input
+						type="text"
+						name="recipient_email"
+						bind:value={recipient_email}
+						style:display="none"
+					/>
+					<button type="button" class="btn-back" on:click={stepBackward}
+						><ArrowLeft></ArrowLeft></button
+					>
+					<button type="submit" class="submit-btn" disabled={step4BtnDisabled}>Create</button>
+				</form>
+			</div>
+		{:else if newParcelStep === 5}
+			<div class="flex-box">
+				<div
+					class="new-parcel-created"
+					in:fade={{ delay: 350, duration: 350 }}
+					out:fade={{ duration: 350 }}
+				>
+					<h2>Your parcel was successfylly created!</h2>
+					<p>Delivery pin:</p>
+					<!-- <p>{deliveryPin}</p> -->
+					<p class="pin">29384</p>
+					<p class="message">You also get an email with this pin and further instructions</p>
+					<a href="/"> <span>Go home</span><ArrowRight size={12} /></a>
+				</div>
+			</div>
+			<!-- Created -->
+		{/if}
 	</div>
 </PageContentFade>
 
 <style lang="scss">
-	.parcel-name {
+	.new-parcel-info {
+		overflow: hidden;
+		font-size: 1.8rem;
+		background-color: var(--s-bg-color);
+		border: 2px solid var(--border);
+		border-radius: 20px;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		padding: 3.2rem;
+		box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.25);
+		gap: 3.2rem;
+	}
+	.new-parcel-left,
+	.new-parcel-right {
+		display: flex;
+		gap: 3.6rem;
+
+		.labels,
+		.new-parcel-content {
+			display: flex;
+			flex-direction: column;
+			gap: 3.6rem;
+		}
+
+		.new-parcel-content {
+			color: var(--accent-color);
+		}
+	}
+
+	.user-inputs.confimation-checkbox {
+		margin-bottom: 2rem;
+	}
+	.confirmation-box {
+		display: block;
+		position: relative;
+		padding-left: 3.2rem;
+		cursor: pointer;
+		font-size: 1.2rem;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+
+	.confirmation-box input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+
+	.checkmark {
+		position: absolute;
+		top: 50%;
+		left: 0;
+		transform: translateY(-50%);
+		height: 1.8rem;
+		width: 1.8rem;
+		border-radius: 4px;
+		background-color: var(--text-color);
+		transition: all 0.3s;
+	}
+
+	.confirmation-box:hover input ~ .checkmark {
+		background-color: var(--action-btn);
+	}
+
+	.confirmation-box input:checked ~ .checkmark {
+		background-color: var(--action-btn);
+	}
+
+	.checkmark:after {
+		content: '';
+		position: absolute;
+		display: none;
+	}
+
+	.confirmation-box input:checked ~ .checkmark:after {
+		display: block;
+	}
+
+	.confirmation-box .checkmark:after {
+		left: 0.6rem;
+		top: 0.2rem;
+		width: 0.4rem;
+		height: 1rem;
+		border: solid #000;
+		border-width: 0 2px 2px 0;
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		transform: rotate(45deg);
+	}
+	.parcel-name-input {
 		&::after {
 			content: 'Optional';
 			position: absolute;
 			top: 50%;
 			right: -4.8rem;
+			transform: translateY(-50%);
+		}
+	}
+
+	.kg {
+		&::after {
+			content: 'kg';
+			position: absolute;
+			top: 50%;
+			right: -2.4rem;
+			transform: translateY(-50%);
+		}
+	}
+	.m {
+		&::after {
+			content: 'm';
+			position: absolute;
+			top: 50%;
+			right: -2.4rem;
 			transform: translateY(-50%);
 		}
 	}
@@ -340,6 +680,57 @@
 				.circle {
 					background-color: var(--text-color);
 				}
+			}
+		}
+	}
+
+	.flex-box {
+		display: flex;
+		justify-content: center;
+	}
+	.new-parcel-created {
+		background-color: var(--s-bg-color);
+		border-radius: 20px;
+		border: 2px solid var(--border);
+		padding: 3.2rem;
+		text-align: center;
+
+		h2 {
+			font-size: 2.4rem;
+			font-weight: 300;
+			color: var(--accent-color);
+			margin-bottom: 2.4rem;
+		}
+		p {
+			font-size: 1.8rem;
+			margin-bottom: 1.2rem;
+
+			&.pin {
+				font-size: 2.4rem;
+				color: var(--accent-color);
+				margin-bottom: 3.2rem;
+			}
+
+			&.message {
+				font-size: 1.4rem;
+			}
+		}
+
+		a {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.4rem;
+			&:link,
+			&:visited {
+				font-size: 1.4rem;
+				text-decoration: none;
+				transition: all 0.3s;
+				color: var(--text-color);
+			}
+
+			&:hover,
+			&:active {
+				color: var(--accent-color);
 			}
 		}
 	}

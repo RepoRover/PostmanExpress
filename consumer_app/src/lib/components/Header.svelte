@@ -31,24 +31,6 @@
 		await tick();
 		deleteAccModalOpen = true;
 	};
-
-	const handleKeyDown = (/** @type {{ preventDefault: () => void; key: string; }} */ event) => {
-		if (event.key === 'm') {
-			event.preventDefault();
-			if (isMenuOpen) {
-				closeMenu();
-			} else {
-				openMenu();
-			}
-		}
-	};
-
-	onMount(() => {
-		window.addEventListener('keydown', handleKeyDown);
-		return () => {
-			window.removeEventListener('keydown', handleKeyDown);
-		};
-	});
 </script>
 
 <header in:fade={{ duration: 350, delay: 350 }} out:fade={{ duration: 350 }}>

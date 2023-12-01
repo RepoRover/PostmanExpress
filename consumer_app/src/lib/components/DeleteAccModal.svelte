@@ -131,8 +131,9 @@
 
 	.checkmark {
 		position: absolute;
-		top: 0;
+		top: 50%;
 		left: 0;
+		transform: translateY(-50%);
 		height: 1.8rem;
 		width: 1.8rem;
 		border-radius: 4px;

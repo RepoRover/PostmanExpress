@@ -57,7 +57,7 @@
 	$: submitDisabled = !passwordValid || user_email.length === 0 || isLoading ? true : false;
 </script>
 
-<div class="login" in:fade={{ delay: 425, duration: 400 }} out:fade={{ duration: 350 }}>
+<div class="login" in:fade={{ delay: 350, duration: 350 }} out:fade={{ duration: 350 }}>
 	<div class="subtitle">
 		<!-- <h1>PostmanExpress</h1> -->
 		<div class="loader">

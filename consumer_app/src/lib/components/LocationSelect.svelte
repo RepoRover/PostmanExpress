@@ -7,7 +7,7 @@
 
 	let selectIsOpen = false;
 	let location = null;
-	let selectedLocationLabel = 'Select your location';
+	export let selectedLocationLabel = 'Select your location';
 	let locationOptions = [
 		{ value: 'helsinki', label: 'Helsinki' },
 		{ value: 'oulu', label: 'Oulu' },
@@ -21,7 +21,7 @@
 		selectedLocationLabel = option.label;
 		selectIsOpen = false;
 
-		dispatcher('selectLocation', location);
+		dispatcher('selectLocation', { value: location, label: selectedLocationLabel });
 	};
 
 	/**
@@ -49,7 +49,7 @@
 <div
 	class="input-box"
 	use:clickOutside
-	in:fade={{ delay: 425, duration: 350 }}
+	in:fade={{ delay: 350, duration: 350 }}
 	out:fade={{ duration: 350 }}
 >
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -60,7 +60,9 @@
 			<div class="select">
 				<div
 					class="selected-value"
-					class:selected={selectedLocationLabel !== 'Select your location'}
+					class:selected={locationOptions.some(
+						(location) => location.label === selectedLocationLabel
+					)}
 				>
 					{selectedLocationLabel}
 				</div>

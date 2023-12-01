@@ -1,4 +1,6 @@
 <script>
+	// @ts-nocheck
+
 	import { AuthorizedParcelInfo, UnauthorizedParcelInfo, PageContentFade } from '$components';
 	import NoParcel from '$components/NoParcel.svelte';
 
