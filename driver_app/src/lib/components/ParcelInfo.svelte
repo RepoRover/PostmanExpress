@@ -1,7 +1,6 @@
 <script>
-	import { ChevronDown, Eye, EyeOff } from 'lucide-svelte';
+	import { Eye, EyeOff } from 'lucide-svelte';
 	import { statusMap } from '$helpers/const.js';
-	import { StatusTimestamps } from '$components';
 	import { tick } from 'svelte';
 
 	export let parcelData;
@@ -54,15 +53,6 @@
 					{parcelData.parcel_status.charAt(0).toUpperCase() + parcelData.parcel_status.slice(1)}
 				</p>
 			</div>
-		</div>
-		<div class="left-bottom">
-			<button on:click={openCloseTimestamps} class:open={timestampsOpen}
-				>Status roadmap
-				<div class="icon" class:open={timestampsOpen}><ChevronDown size={19} /></div>
-			</button>
-			{#if timestampsOpen}
-				<StatusTimestamps status_timestamps={timeStamps} />
-			{/if}
 		</div>
 	</div>
 	<div class="right">

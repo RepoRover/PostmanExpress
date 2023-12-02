@@ -4,6 +4,9 @@
 
 	const dispatcher = createEventDispatcher();
 
+	/**
+	 * @type {string}
+	 */
 	export let overlayLocation;
 
 	const overlayClick = async () => {
@@ -11,8 +14,6 @@
 
 		if (overlayLocation === 'menu') {
 			dispatcher('closeMenu');
-		} else if (overlayLocation === 'accDeleteModal') {
-			dispatcher('closeAccDeleteModal');
 		}
 	};
 </script>

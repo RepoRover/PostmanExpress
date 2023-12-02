@@ -1,8 +1,7 @@
 <script>
 	import '../styles/main.scss';
-	import { Header, Footer } from '$components';
+	import { Header, Footer, Notifications } from '$components';
 	import { page } from '$app/stores';
-	import { Notifications } from '$components';
 	import { notifications } from '$stores';
 	import { Loader } from '$components';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
@@ -81,7 +80,7 @@
 
 <Notifications />
 
-{#if $page.url.pathname !== '/auth/login' && $page.url.pathname !== '/auth/signup'}
+{#if $page.url.pathname !== '/login'}
 	<div
 		class="header"
 		bind:this={header}
@@ -97,7 +96,7 @@
 	<div class="page-content">
 		<slot />
 	</div>
-	{#if $page.url.pathname !== '/auth/login' && $page.url.pathname !== '/auth/signup'}
+	{#if $page.url.pathname !== '/login'}
 		<Footer></Footer>
 	{/if}
 </main>

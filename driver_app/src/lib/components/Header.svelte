@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores';
-	import { DeleteAccModal, Overlay, SideBar } from '$components';
-	import { onMount, tick } from 'svelte';
+	import { Overlay, SideBar } from '$components';
+	import { tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	/**
@@ -10,7 +10,6 @@
 	export let username;
 
 	let isMenuOpen = false;
-	let deleteAccModalOpen = false;
 
 	const openMenu = async () => {
 		await tick();
@@ -20,16 +19,6 @@
 	const closeMenu = async () => {
 		await tick();
 		isMenuOpen = false;
-	};
-
-	const closeAccDeleteModal = async () => {
-		await tick();
-		deleteAccModalOpen = false;
-	};
-
-	const openAccDeleteModal = async () => {
-		await tick();
-		deleteAccModalOpen = true;
 	};
 </script>
 
@@ -43,7 +32,7 @@
 				{#if $page.data.user}
 					<button on:click={openMenu} class="text menu-btn">Menu</button>
 				{:else}
-					<a href="/auth/login" class="text menu-btn">Login</a>
+					<a href="/login" class="text menu-btn">Login</a>
 				{/if}
 			</div>
 		</div>
@@ -51,18 +40,8 @@
 </header>
 
 {#if isMenuOpen && username !== null}
-	<SideBar
-		{username}
-		{isMenuOpen}
-		on:closeMenu={closeMenu}
-		on:openAccDeleteModal={openAccDeleteModal}
-	></SideBar>
+	<SideBar {username} {isMenuOpen} on:closeMenu={closeMenu}></SideBar>
 	<Overlay on:closeMenu={closeMenu} overlayLocation="menu"></Overlay>
-{/if}
-
-{#if deleteAccModalOpen}
-	<Overlay on:closeAccDeleteModal={closeAccDeleteModal} overlayLocation="accDeleteModal"></Overlay>
-	<DeleteAccModal on:closeAccDeleteModal={closeAccDeleteModal}></DeleteAccModal>
 {/if}
 
 <style lang="scss">
