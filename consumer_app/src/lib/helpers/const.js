@@ -8,3 +8,5 @@ export const statusMap = {
 	'ready for pickup': 'ready-for-pick-up',
 	delivered: 'delivered'
 };
+
+export const protectedRoutes = ['/parcels/new', '/parcels/history'];
