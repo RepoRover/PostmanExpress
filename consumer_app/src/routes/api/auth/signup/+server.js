@@ -12,6 +12,11 @@ export const POST = async ({ fetch, request, cookies }) => {
 		throw error(response.status, resJSON);
 	}
 
-	cookies.set('access_token', resJSON.access_token, { path: '/' });
+	cookies.set('access_token', resJSON.access_token, {
+		path: '/',
+		httpOnly: true,
+		sameSite: 'strict',
+		secure: true
+	});
 	return json({ status: 'success' });
 };
