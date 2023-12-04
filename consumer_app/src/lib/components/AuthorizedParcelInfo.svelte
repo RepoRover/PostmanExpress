@@ -34,6 +34,12 @@
 				<p>ID:</p>
 				<p>Name:</p>
 				<p>Status:</p>
+				{#if parcelData.delivery_pin}
+					<p>Delivery pin:</p>
+				{/if}
+				{#if parcelData.pickup_pin}
+					<p>Pickup pin:</p>
+				{/if}
 			</div>
 			<div class="contents">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -53,6 +59,12 @@
 				<p class="status {statusMap[parcelData.parcel_status]}">
 					{parcelData.parcel_status.charAt(0).toUpperCase() + parcelData.parcel_status.slice(1)}
 				</p>
+				{#if parcelData.delivery_pin}
+					<p>{parcelData.delivery_pin}</p>
+				{/if}
+				{#if parcelData.pickup_pin}
+					<p>{parcelData.pickup_pin}</p>
+				{/if}
 			</div>
 		</div>
 		<div class="left-bottom">

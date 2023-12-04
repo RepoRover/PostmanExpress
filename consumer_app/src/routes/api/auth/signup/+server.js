@@ -1,3 +1,4 @@
+import { ENV } from '$env/static/private';
 import { sendRequest } from '$helpers';
 import { error, json } from '@sveltejs/kit';
 
@@ -16,7 +17,7 @@ export const POST = async ({ fetch, request, cookies }) => {
 		path: '/',
 		httpOnly: true,
 		sameSite: 'strict',
-		secure: true
+		secure: ENV === 'prod'
 	});
 	return json({ status: 'success' });
 };
