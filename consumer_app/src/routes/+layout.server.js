@@ -1,7 +1,4 @@
 /**@type {import('@sveltejs/kit').ServerLoad} */
-export const load = async ({ fetch }) => {
-	const response = await fetch('/api/me');
-	const resJSON = await response.json();
-
-	return { user: resJSON.data ? resJSON.data : null };
+export const load = async ({ locals }) => {
+	return { user: locals.user };
 };
