@@ -1,5 +1,11 @@
 import { validateEmail } from '$helpers';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+
+/**@type {import('@sveltejs/kit').ServerLoad} */
+export const load = async ({ locals }) => {
+	if (!locals.user) throw redirect(303, '/auth/login');
+};
+
 /** @type {import('./$types').Actions} */
 export const actions = {
 	validateEmail: async ({ request }) => {
