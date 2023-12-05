@@ -31,8 +31,7 @@ jobs:
           ssh $USERNAME@$HOST << 'ENDSSH'
             cd ~/projects/PostmanExpress
             git pull origin main || exit 1
+            cd consumer_app
+            npm run build
+            pm2 restart consumer_svelte
           ENDSSH
-
-# cd consumer_app
-# npm run build
-# pm2 restart consumer_svelte
