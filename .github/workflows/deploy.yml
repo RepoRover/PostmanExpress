@@ -2,7 +2,7 @@ name: Postman.Express applications runner
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
 
 jobs:
   deploy:
@@ -32,7 +32,3 @@ jobs:
             cd ~/projects/PostmanExpress
             git pull origin main || exit 1
           ENDSSH
-
-# cd consumer_app
-# npm run build
-# pm2 restart consumer_svelte
