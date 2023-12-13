@@ -1,38 +1,52 @@
-# create-svelte
+<div align="center">
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+# PostmanExpress
 
-## Creating a project
+PostmanExpress built with SvelteKit is a dedicated application within the PostmanExpress suite, specifically tailored for end-users managing their parcel deliveries and pickups. As a vital component of an automated parcel delivery locker system, reminiscent of those offered by prominent services like Posti and Matkahuolto, this application offers a user-friendly interface and robust features.
 
-If you're seeing this, you've probably already done this step. Congrats!
+</div>
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
 
-# create a new project in my-app
-npm create svelte@latest my-app
+### [Consumer Application](https://svelte.consumer.salute-sir.com)
+
+Here users can:
+
+-   Sign-up
+-   Create new parcels
+-   See own parcels detailed information
+-   Track existing parcels
+
+## Visit PostmanExpress Application
+
+- [PostmanExpress built with SvelteKit](https://svelte.consumer.salute-sir.com)
+
+## Installation
+
+### Pre-requisites
+
+To setup PostmanExpress built with SvelteKit [nodeJS](https://nodejs.org/) is required.
+
+Create .env file in root folder with your env variables (To correctly setup your environment variables check out and setup original project with API and database [here](https://github.com/QuirkoTech/PostmanExpress):
+
+```
+ORG_API_URL=http://org.api
+API_KEY=12345
+APP_HEADER=header
 ```
 
-## Developing
+And after that run in root folder:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+```bash
+npm install
+```
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
 
-To create a production version of your app:
+## Tools and Technologies
 
-```bash
-npm run build
-```
+### Built entirely with SvelteKit
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+[See original project](https://github.com/QuirkoTech/PostmanExpress)
