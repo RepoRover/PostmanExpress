@@ -26,7 +26,7 @@ export const actions = {
 		const height = form.get('height');
 		const length = form.get('length');
 		const width = form.get('width');
-		const parcel_name = form.get('parcel_name');
+		let parcel_name = form.get('parcel_name');
 
 		if (!ship_from || !ship_to || !recipient_email || !weight || !height || !length || !width) {
 			return fail(400, { message: 'Some required fields missing' });
@@ -34,6 +34,8 @@ export const actions = {
 
 		// @ts-ignore
 		parcel_name.trim();
+
+		if (!parcel_name) parcel_name = 'Parcel';
 
 		const response = await fetch('/api/parcels/new', {
 			method: 'POST',
